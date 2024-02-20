@@ -1,5 +1,4 @@
-server:
-  port: 9002
+
 spring:
   datasource:
     # ShardingSphere 对 Driver 自定义，实现分库分表等隐藏逻辑
@@ -9,5 +8,6 @@ spring:
   data:
     redis:
       host: 192.168.88.130
-      port: 6379
       password: zlpen9hth
+server:
+  port: 7001
