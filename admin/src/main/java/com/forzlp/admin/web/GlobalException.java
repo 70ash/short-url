@@ -3,7 +3,7 @@ package com.forzlp.admin.web;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.forzlp.admin.common.convention.errorcode.BaseErrorCode;
-import com.forzlp.admin.common.convention.exception.AbstractException;
+import com.forzlp.admin.common.convention.excetion.AbstractException;
 import com.forzlp.admin.common.convention.result.Result;
 import com.forzlp.admin.common.convention.result.Results;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,17 +15,20 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Optional;
 
 /**
- * 全局异常处理器
- *
+ * @Author 70ash
+ * @Date 2024/1/24 23:08
+ * @Description: 全局异常拦截器
  */
-@Component
+@RestControllerAdvice
 @Slf4j
-// @RestControllerAdvice
-public class GlobalExceptionHandler {
+@Component
+public class GlobalException {
+
 
     /**
      * 拦截参数验证异常
@@ -39,20 +42,18 @@ public class GlobalExceptionHandler {
                 .map(FieldError::getDefaultMessage)
                 .orElse(StrUtil.EMPTY);
         log.error("[{}] {} [ex] {}", request.getMethod(), getUrl(request), exceptionStr);
-        return Results.failure(BaseErrorCode.CLIENT_ERROR.code(), exceptionStr);
+        return Results.fail(BaseErrorCode.CLIENT_ERROR.code(), exceptionStr);
     }
 
-    /**
-     * 拦截应用内抛出的异常
-     */
     @ExceptionHandler(value = {AbstractException.class})
     public Result abstractException(HttpServletRequest request, AbstractException ex) {
         if (ex.getCause() != null) {
             log.error("[{}] {} [ex] {}", request.getMethod(), request.getRequestURL().toString(), ex.toString(), ex.getCause());
-            return Results.failure(ex);
+            return Results.fail(ex);
         }
         log.error("[{}] {} [ex] {}", request.getMethod(), request.getRequestURL().toString(), ex.toString());
-        return Results.failure(ex);
+        return Results.fail(ex);
+
     }
 
     /**
@@ -61,7 +62,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Throwable.class)
     public Result defaultErrorHandler(HttpServletRequest request, Throwable throwable) {
         log.error("[{}] {} ", request.getMethod(), getUrl(request), throwable);
-        return Results.failure();
+        return Results.fail();
     }
 
     private String getUrl(HttpServletRequest request) {

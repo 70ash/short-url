@@ -1,20 +1,23 @@
 package com.forzlp.admin.dto.resp;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.forzlp.admin.common.serilize.PhoneDesensitizationSerializer;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @Author 70ash
- * @Date 2024/1/22 14:42
+ * @Date 2024/1/25 11:50
  * @Description:
  */
 @Data
-public class UserInfoRespDTO {
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserRespDTO {
     /**
      * ID
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
@@ -35,6 +38,7 @@ public class UserInfoRespDTO {
     /**
      * 手机号
      */
+    @JsonSerialize(using = PhoneDesensitizationSerializer.class)
     private String phone;
 
     /**
