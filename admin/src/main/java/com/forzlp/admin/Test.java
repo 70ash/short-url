@@ -6,5 +6,7 @@ package com.forzlp.admin;
  * @Description:
  */
 public class Test {
+    public static void main(String[] args) {
 
+    }
 }
