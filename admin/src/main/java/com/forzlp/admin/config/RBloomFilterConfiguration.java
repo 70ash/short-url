@@ -1,4 +1,4 @@
-package com.forzlp.admin.utils;
+package com.forzlp.admin.config;
 
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RedissonClient;
@@ -16,8 +16,8 @@ public class RBloomFilterConfiguration {
      */
     @Bean
     public RBloomFilter<String> userRegisterCachePenetrationBloomFilter(RedissonClient redissonClient) {
-        RBloomFilter<String> cachePenetrationBloomFilter = redissonClient.getBloomFilter("xxx");
-        cachePenetrationBloomFilter.tryInit(3000000, 0.001);
+        RBloomFilter<String> cachePenetrationBloomFilter = redissonClient.getBloomFilter("userRegisterCachePenetrationBloomFilter");
+        cachePenetrationBloomFilter.tryInit(10000000, 0.0001);
         return cachePenetrationBloomFilter;
     }
 }
