@@ -1,10 +1,11 @@
 package com.forzlp.admin.common.convention.errorcode;
 
 /**
- * 平台错误码
+ * @Author 70ash
+ * @Date 2024/1/24 23:15
+ * @Description:
  */
 public interface IErrorCode {
-
     /**
      * 错误码
      */
