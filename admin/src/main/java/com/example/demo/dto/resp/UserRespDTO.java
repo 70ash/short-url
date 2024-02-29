@@ -1,7 +1,7 @@
-package com.forzlp.admin.dto.resp;
+package com.example.demo.dto.resp;
 
+import com.example.demo.common.serilize.PhoneDesensitizationSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.forzlp.admin.common.serilize.PhoneDesensitizationSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
