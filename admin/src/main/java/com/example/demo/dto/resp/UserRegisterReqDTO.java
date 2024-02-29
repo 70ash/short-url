@@ -1,4 +1,4 @@
-package com.forzlp.admin.dto.resp;
+package com.example.demo.dto.resp;
 
 import lombok.Data;
 
