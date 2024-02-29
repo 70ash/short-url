@@ -1,7 +1,7 @@
-package com.forzlp.admin.dao.mapper;
+package com.example.demo.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.forzlp.admin.dao.entity.Group;
+import com.example.demo.dao.entity.Group;
 
 /**
  * @Author 70ash
