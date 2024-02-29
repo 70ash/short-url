@@ -1,11 +1,11 @@
-package com.forzlp.admin.web;
+package com.example.demo.web;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.forzlp.admin.common.convention.errorcode.BaseErrorCode;
-import com.forzlp.admin.common.convention.excetion.AbstractException;
-import com.forzlp.admin.common.convention.result.Result;
-import com.forzlp.admin.common.convention.result.Results;
+import com.example.demo.common.convention.errorcode.BaseErrorCode;
+import com.example.demo.common.convention.excetion.AbstractException;
+import com.example.demo.common.convention.result.Result;
+import com.example.demo.common.convention.result.Results;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
