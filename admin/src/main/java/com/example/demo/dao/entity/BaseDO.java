@@ -1,4 +1,4 @@
-package com.forzlp.admin.dao.entity;
+package com.example.demo.dao.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
