@@ -1,11 +1,11 @@
-package com.forzlp.admin.service;
+package com.example.demo.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.forzlp.admin.dao.entity.User;
-import com.forzlp.admin.dto.req.UserLoginReqDTO;
-import com.forzlp.admin.dto.resp.UserLoginRespDTO;
-import com.forzlp.admin.dto.resp.UserRegisterReqDTO;
-import com.forzlp.admin.dto.resp.UserRespDTO;
+import com.example.demo.dao.entity.User;
+import com.example.demo.dto.req.UserLoginReqDTO;
+import com.example.demo.dto.resp.UserLoginRespDTO;
+import com.example.demo.dto.resp.UserRegisterReqDTO;
+import com.example.demo.dto.resp.UserRespDTO;
 
 /**
  * @Author 70ash

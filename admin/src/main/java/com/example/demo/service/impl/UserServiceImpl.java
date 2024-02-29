@@ -1,4 +1,4 @@
-package com.forzlp.admin.service.impl;
+package com.example.demo.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
@@ -6,14 +6,14 @@ import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.forzlp.admin.common.convention.excetion.ClientException;
-import com.forzlp.admin.dao.entity.User;
-import com.forzlp.admin.dao.mapper.UserMapper;
-import com.forzlp.admin.dto.req.UserLoginReqDTO;
-import com.forzlp.admin.dto.resp.UserLoginRespDTO;
-import com.forzlp.admin.dto.resp.UserRegisterReqDTO;
-import com.forzlp.admin.dto.resp.UserRespDTO;
-import com.forzlp.admin.service.UserService;
+import com.example.demo.common.convention.excetion.ClientException;
+import com.example.demo.dao.entity.User;
+import com.example.demo.dao.mapper.UserMapper;
+import com.example.demo.dto.req.UserLoginReqDTO;
+import com.example.demo.dto.resp.UserLoginRespDTO;
+import com.example.demo.dto.resp.UserRegisterReqDTO;
+import com.example.demo.dto.resp.UserRespDTO;
+import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
@@ -22,9 +22,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import static com.forzlp.admin.common.convention.errorcode.BaseErrorCode.*;
-import static com.forzlp.admin.common.enums.RedisEnums.LOCK_USER_REGISTER;
-import static com.forzlp.admin.common.enums.RedisEnums.USER_LOGIN_KEY;
+import static com.example.demo.common.convention.errorcode.BaseErrorCode.*;
+import static com.example.demo.common.enums.RedisEnums.LOCK_USER_REGISTER;
+import static com.example.demo.common.enums.RedisEnums.USER_LOGIN_KEY;
 
 /**
  * @Author 70ash

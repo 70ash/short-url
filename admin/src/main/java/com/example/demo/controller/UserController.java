@@ -1,14 +1,14 @@
-package com.forzlp.admin.controller;
+package com.example.demo.controller;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.forzlp.admin.common.convention.result.Result;
-import com.forzlp.admin.common.convention.result.Results;
-import com.forzlp.admin.dto.req.UserLoginReqDTO;
-import com.forzlp.admin.dto.resp.UserActualRespDTO;
-import com.forzlp.admin.dto.resp.UserLoginRespDTO;
-import com.forzlp.admin.dto.resp.UserRegisterReqDTO;
-import com.forzlp.admin.dto.resp.UserRespDTO;
-import com.forzlp.admin.service.UserService;
+import com.example.demo.common.convention.result.Result;
+import com.example.demo.common.convention.result.Results;
+import com.example.demo.dto.req.UserLoginReqDTO;
+import com.example.demo.dto.resp.UserActualRespDTO;
+import com.example.demo.dto.resp.UserLoginRespDTO;
+import com.example.demo.dto.resp.UserRegisterReqDTO;
+import com.example.demo.dto.resp.UserRespDTO;
+import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
