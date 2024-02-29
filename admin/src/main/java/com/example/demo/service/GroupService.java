@@ -1,8 +1,7 @@
-package com.forzlp.admin.service;
-
+package com.example.demo.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.forzlp.admin.dao.entity.Group;
+import com.example.demo.dao.entity.Group;
 
 /**
  * @Author 70ash
@@ -10,4 +9,6 @@ import com.forzlp.admin.dao.entity.Group;
  * @Description:
  */
 public interface GroupService extends IService<Group> {
+    void saveGroup(String groupName);
+
 }
