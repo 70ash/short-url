@@ -1,4 +1,4 @@
-package com.forzlp.admin.config;
+package com.example.demo.config;
 
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RedissonClient;
