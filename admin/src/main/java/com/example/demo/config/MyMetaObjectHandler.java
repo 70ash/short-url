@@ -1,4 +1,4 @@
-package com.forzlp.admin.config;
+package com.example.demo.config;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import lombok.extern.slf4j.Slf4j;
