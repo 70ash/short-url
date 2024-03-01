@@ -1,4 +1,4 @@
-package com.forzlp.admin.common.enums;
+package com.example.demo.common.enums;
 
 /**
  * @Author 70ash
