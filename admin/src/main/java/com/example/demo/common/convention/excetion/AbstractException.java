@@ -1,6 +1,6 @@
-package com.forzlp.admin.common.convention.excetion;
+package com.example.demo.common.convention.excetion;
 
-import com.forzlp.admin.common.convention.errorcode.IErrorCode;
+import com.example.demo.common.convention.errorcode.IErrorCode;
 import lombok.Getter;
 import org.springframework.util.StringUtils;
 

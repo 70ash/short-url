@@ -1,9 +1,8 @@
-package com.forzlp.admin.common.convention.excetion;
+package com.example.demo.common.convention.excetion;
 
+import com.example.demo.common.convention.errorcode.IErrorCode;
 
-import com.forzlp.admin.common.convention.errorcode.IErrorCode;
-
-import static com.forzlp.admin.common.convention.errorcode.BaseErrorCode.CLIENT_ERROR;
+import static com.example.demo.common.convention.errorcode.BaseErrorCode.CLIENT_ERROR;
 
 /**
  * @Author 70ash
