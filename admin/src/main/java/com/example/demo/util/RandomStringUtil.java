@@ -1,30 +1,21 @@
 package com.example.demo.util;
 
-import java.util.Random;
+import java.security.SecureRandom;
 
 public class RandomStringUtil {
-    
-    // 生成包含字母和数字的六位数
-    public static String generateRandomString() {
-        String chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-        StringBuilder stringBuilder = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < 6; i++) {
-            int index = random.nextInt(chars.length());
-            stringBuilder.append(chars.charAt(index));
+
+    private static final String CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789";
+    private static final SecureRandom secureRandom = new SecureRandom();
+
+    // 生成指定长度的随机字符串
+    public static String generateRandomString(int length) {
+        StringBuilder stringBuilder = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            stringBuilder.append(CHARACTERS.charAt(secureRandom.nextInt(CHARACTERS.length())));
         }
         return stringBuilder.toString();
     }
-    
-    // 可根据需要调整生成的位数
-    public static String generateRandomString(int length) {
-        String chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-        StringBuilder stringBuilder = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < length; i++) {
-            int index = random.nextInt(chars.length());
-            stringBuilder.append(chars.charAt(index));
-        }
-        return stringBuilder.toString();
+    public static String generateRandomString() {
+        return generateRandomString(6);
     }
 }
