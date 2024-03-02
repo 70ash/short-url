@@ -1,8 +1,8 @@
-package com.forzlp.admin.common.convention.result;
+package com.example.demo.common.convention.result;
 
-import com.forzlp.admin.common.convention.excetion.AbstractException;
+import com.example.demo.common.convention.excetion.AbstractException;
 
-import static com.forzlp.admin.common.convention.errorcode.BaseErrorCode.SERVICE_ERROR;
+import static com.example.demo.common.convention.errorcode.BaseErrorCode.SERVICE_ERROR;
 
 /**
  * @Author 70ash

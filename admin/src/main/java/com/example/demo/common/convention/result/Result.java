@@ -1,4 +1,4 @@
-package com.forzlp.admin.common.convention.result;
+package com.example.demo.common.convention.result;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
