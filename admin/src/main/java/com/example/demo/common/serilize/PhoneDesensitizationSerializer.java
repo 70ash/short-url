@@ -1,4 +1,4 @@
-package com.forzlp.admin.common.serilize;
+package com.example.demo.common.serilize;
 
 import cn.hutool.core.util.DesensitizedUtil;
 import com.fasterxml.jackson.core.JsonGenerator;
