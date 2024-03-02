@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  * @Description:
  */
 @RestController
-@RequestMapping("/shortLink/user")
+@RequestMapping("/short-link/user")
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;
