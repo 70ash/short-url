@@ -2,6 +2,7 @@ package com.example.demo.dao.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 
@@ -31,11 +32,6 @@ public class Link extends BaseDO implements Serializable {
     private String gid;
 
     /**
-     * 域名
-     */
-    private String domain;
-
-    /**
      * 短链接
      */
     private String shortUrl;
@@ -58,15 +54,16 @@ public class Link extends BaseDO implements Serializable {
     /**
      * 启用状态，0：启用，1：启用
      */
-    private int enableStatus;
+    private Integer enableStatus;
 
     /**
      * 有效时间，0：永久有效，1：自定义
      */
-    private int validType;
+    private Integer validType;
 
     /**
      * 有效时间
      */
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date validTime;
 }
