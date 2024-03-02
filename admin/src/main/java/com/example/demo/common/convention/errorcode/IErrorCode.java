@@ -1,4 +1,4 @@
-package com.forzlp.admin.common.convention.errorcode;
+package com.example.demo.common.convention.errorcode;
 
 /**
  * @Author 70ash
