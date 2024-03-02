@@ -1,30 +1,22 @@
-package com.example.demo.dto.resp;
+package com.forzlp.project.dto.req;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 /**
  * @Author 70ash
- * @Date 2024/3/2 14:09
+ * @Date 2024/3/2 14:07
  * @Description:
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class LinkCreateRespDTO {
-    private String gid;
+public class LinkCreateReqDTO {
 
     /**
-     * 完整短链接
+     * 分组标识
      */
-    private String fullShortUrl;
-
+    private String gid;
     /**
      * 原始链接
      */
@@ -33,8 +25,11 @@ public class LinkCreateRespDTO {
     /**
      * 有效时间，0：永久有效，1：自定义
      */
-    private int validType;
+    private Integer validType;
 
+    /**
+     * 有效时间
+     */
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date validTime;
 }

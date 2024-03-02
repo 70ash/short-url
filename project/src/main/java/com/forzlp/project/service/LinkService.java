@@ -1,7 +1,8 @@
-package com.example.demo.service;
+package com.forzlp.project.service;
 
-import com.example.demo.dto.req.LinkCreateReqDTO;
-import com.example.demo.dto.resp.LinkCreateRespDTO;
+
+import com.forzlp.project.dto.req.LinkCreateReqDTO;
+import com.forzlp.project.dto.resp.LinkCreateRespDTO;
 
 import java.net.URISyntaxException;
 

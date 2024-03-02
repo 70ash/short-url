@@ -1,4 +1,4 @@
-package com.example.demo.dao.entity;
+package com.forzlp.project.dao.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -30,6 +30,11 @@ public class Link extends BaseDO implements Serializable {
      * 分组标识
      */
     private String gid;
+
+    /**
+     * 域名
+     */
+    private String domain;
 
     /**
      * 短链接
