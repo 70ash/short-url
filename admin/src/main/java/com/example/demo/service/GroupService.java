@@ -2,6 +2,11 @@ package com.example.demo.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.demo.dao.entity.Group;
+import com.example.demo.dto.req.UpdateGroupReqDTO;
+import com.example.demo.dto.resp.ListGroupRespDTO;
+import com.example.demo.dto.resp.ListLinkRespDTO;
+
+import java.util.List;
 
 /**
  * @Author 70ash
@@ -9,6 +14,14 @@ import com.example.demo.dao.entity.Group;
  * @Description:
  */
 public interface GroupService extends IService<Group> {
+    // 新增短链接分组
     void saveGroup(String groupName);
+    // 查询短链接分组
+    List<ListGroupRespDTO> listGroup();
+
+    List<ListLinkRespDTO> listGroupByName(String name);
+
+    void updateGroup(UpdateGroupReqDTO requestParam);
+    void updateGroup(String gid);
 
 }

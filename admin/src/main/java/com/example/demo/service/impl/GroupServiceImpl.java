@@ -1,14 +1,18 @@
 package com.example.demo.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.demo.common.convention.excetion.ServiceException;
 import com.example.demo.dao.entity.Group;
 import com.example.demo.dao.mapper.GroupMapper;
+import com.example.demo.dto.req.UpdateGroupReqDTO;
+import com.example.demo.dto.resp.ListGroupRespDTO;
+import com.example.demo.dto.resp.ListLinkRespDTO;
 import com.example.demo.service.GroupService;
 import com.example.demo.util.RandomStringUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @Author 70ash
@@ -19,14 +23,14 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements GroupService {
 
+    private GroupMapper groupMapper;
+
     @Override
     public void saveGroup(String groupName) {
         String gid;
         while (true) {
             gid = RandomStringUtil.generateRandomString();
-            LambdaQueryWrapper<Group> wrapper = Wrappers.lambdaQuery(Group.class);
-            LambdaQueryWrapper<Group> eq = wrapper.eq(Group::getGid, gid);
-            Group one = getOne(eq);
+            Group one = groupMapper.selectByGid(gid);
             if (one == null) break;
         }
         Group group = Group.builder()
@@ -35,6 +39,41 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
                 //TODO 后续从网关得到username
                 .username(null)
                 .build();
-        save(group);
+        groupMapper.insertGroup(group);
+    }
+
+
+    @Override
+    public List<ListGroupRespDTO> listGroup() {
+        // TODO 后续从网关中获取username
+        String username = "小明";
+        List<ListGroupRespDTO> list = groupMapper.selectBatchByUserName(username);
+        return list;
+    }
+
+    @Override
+    public List<ListLinkRespDTO> listGroupByName(String name) {
+
+        return null;
+    }
+
+    @Override
+    public void updateGroup(UpdateGroupReqDTO requestParam) {
+        // TODO 后续从网关中获取username
+        String username = "小明";
+        int i = groupMapper.updateGroup(username, requestParam);
+        if(i < 1) {
+            throw new ServiceException("更新分组名失败");
+        }
+    }
+
+    @Override
+    public void updateGroup(String gid) {
+        // TODO 后续从网关中获取username
+        String username = "小明";
+        int i = groupMapper.deleteByGid(username, gid);
+        if(i < 1) {
+            throw new ServiceException("删除分组失败");
+        }
     }
 }
