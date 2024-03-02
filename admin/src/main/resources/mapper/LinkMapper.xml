@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.mapper.LinkMapper">
+
+    <insert id="insertLink">
+        INSERT INTO t_link (gid, short_url, full_short_url, origin_url, click_num, enable_status, valid_type, valid_time, create_time, update_time, del_flag)
+        VALUES
+        (#{gid}, #{shortUrl}, #{fullShortUrl}, #{originUrl}, #{clickNum}, #{enableStatus}, #{validType}, #{validTime}, now(), now() , 0);
+    </insert>
+</mapper>
