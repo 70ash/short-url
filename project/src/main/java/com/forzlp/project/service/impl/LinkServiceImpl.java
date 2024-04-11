@@ -3,6 +3,7 @@ package com.forzlp.project.service.impl;
 
 import com.forzlp.project.common.convention.errorcode.BaseErrorCode;
 import com.forzlp.project.common.convention.excetion.ClientException;
+import com.forzlp.project.common.convention.excetion.ServiceException;
 import com.forzlp.project.dao.entity.Link;
 import com.forzlp.project.dao.mapper.LinkMapper;
 import com.forzlp.project.dto.req.LinkCreateReqDTO;
@@ -15,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBloomFilter;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 /**
  * @Author 70ash
@@ -29,12 +32,14 @@ public class LinkServiceImpl implements LinkService {
     private RBloomFilter shortUrlCreateCachePenetrationBloomFilter;
     @Override
     public LinkCreateRespDTO saveLink(LinkCreateReqDTO requestParam){
+        // 协议
+        String protocol = URLParser.extractProtocol(requestParam.getOriginUrl());
         // 域名
         String domain = URLParser.extractDomain(requestParam.getOriginUrl());
         // 路径
         String path = generateSuffix(requestParam);
         // 获取完整短链接
-        String fullShortUrl = domain + "/" + path;
+        String fullShortUrl = protocol + "://" + domain + "/" + path;
         LinkCreateRespDTO linkCreateRespDTO = LinkCreateRespDTO.builder()
                 .gid(requestParam.getGid())
                 .originUrl(requestParam.getOriginUrl())
@@ -45,6 +50,7 @@ public class LinkServiceImpl implements LinkService {
         // 短链接
         Link link = Link.builder()
                 .gid(requestParam.getGid())
+                .domain(domain)
                 .originUrl(requestParam.getOriginUrl())
                 .shortUrl(path)
                 .fullShortUrl(fullShortUrl)
@@ -55,6 +61,7 @@ public class LinkServiceImpl implements LinkService {
                 .build();
         try {
             linkMapper.insertLink(link);
+            // 加入到布隆过滤器
             shortUrlCreateCachePenetrationBloomFilter.add(fullShortUrl);
         }catch (DuplicateKeyException ex) {
             log.warn("短链接频繁创建，请稍后再试");
@@ -65,12 +72,16 @@ public class LinkServiceImpl implements LinkService {
     public String generateSuffix(LinkCreateReqDTO requestParam) {
         String domain = URLParser.extractDomain(requestParam.getOriginUrl());
         String path = null;
+        // 短链接需要保证唯一性(整个短链接)，所以需要判断其是否存在于数据库中，如果存在则不能创建
+        // 这里海量数据判空使用布隆过滤器，布隆过滤器判断其存在时查询数据库(可能误判为存在)，如果
+        // 数据库中也存在就代表存在，否则就代表不存在，可以创建
         int shortUrlCreateTimes = 0;
         while (true) {
             if (shortUrlCreateTimes > 10) {
-                break;
+                throw new ServiceException("短链接频繁创建，请稍后再试");
             }
-            path = HashUtil.hashToBase62(requestParam.getOriginUrl());
+            String originUrl = requestParam.getOriginUrl() + UUID.randomUUID();
+            path = HashUtil.hashToBase62(originUrl);
             String fullShortUrl = domain + "/" + path;
             // 海量数据判空不推荐查数据库, 推荐使用布隆过滤器
             // 可能出现实际未创建，但误判其已创建的情况。这种情况下会再次生成短链接。
