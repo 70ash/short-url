@@ -1,6 +1,6 @@
 package com.example.demo.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.demo.common.convention.excetion.ClientException;
 import com.example.demo.common.convention.excetion.ServiceException;
 import com.example.demo.dao.entity.Group;
 import com.example.demo.dao.mapper.GroupMapper;
@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.example.demo.common.convention.errorcode.BaseErrorCode.USER_GROUP_EXIST;
+
 /**
  * @Author 70ash
  * @Date 2024/2/20 16:43
@@ -21,25 +23,30 @@ import java.util.List;
  */
 @Service
 @AllArgsConstructor
-public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements GroupService {
+public class GroupServiceImpl implements GroupService {
 
     private GroupMapper groupMapper;
 
     @Override
     public void saveGroup(String groupName) {
         String gid;
+        String username = "70ash";
         while (true) {
             gid = RandomStringUtil.generateRandomString();
-            Group one = groupMapper.selectByGid(gid);
+            Group one = groupMapper.selectByGid(username, gid);
             if (one == null) break;
         }
         Group group = Group.builder()
                 .gid(gid)
                 .name(groupName)
                 //TODO 后续从网关得到username
-                .username(null)
+                .username(username)
                 .build();
-        groupMapper.insertGroup(group);
+        try {
+            groupMapper.insertGroup(group);
+        } catch (Exception e) {
+            throw new ClientException(USER_GROUP_EXIST);
+        }
     }
 
 

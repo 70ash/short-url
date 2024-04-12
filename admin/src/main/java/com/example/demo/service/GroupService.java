@@ -1,7 +1,5 @@
 package com.example.demo.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.demo.dao.entity.Group;
 import com.example.demo.dto.req.UpdateGroupReqDTO;
 import com.example.demo.dto.resp.ListGroupRespDTO;
 import com.example.demo.dto.resp.ListLinkRespDTO;
@@ -13,7 +11,7 @@ import java.util.List;
  * @Date 2024/2/20 16:43
  * @Description:
  */
-public interface GroupService extends IService<Group> {
+public interface GroupService{
     // 新增短链接分组
     void saveGroup(String groupName);
     // 查询短链接分组

@@ -1,7 +1,5 @@
 package com.example.demo.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.demo.dao.entity.User;
 import com.example.demo.dto.req.UserLoginReqDTO;
 import com.example.demo.dto.resp.UserLoginRespDTO;
 import com.example.demo.dto.resp.UserRegisterReqDTO;
@@ -12,7 +10,7 @@ import com.example.demo.dto.resp.UserRespDTO;
  * @Date 2024/1/25 11:57
  * @Description:
  */
-public interface UserService extends IService<User> {
+public interface UserService{
     UserRespDTO getUserByUsername(String username);
 
     /**
@@ -42,4 +40,6 @@ public interface UserService extends IService<User> {
      * @return 已登录返回True, 未登录返回False
      */
     Boolean checkLogin(String username, String token);
+
+    String logout(String username, String token);
 }

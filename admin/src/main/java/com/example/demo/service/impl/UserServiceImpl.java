@@ -5,7 +5,6 @@ import cn.hutool.core.lang.UUID;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.common.convention.excetion.ClientException;
 import com.example.demo.dao.entity.User;
 import com.example.demo.dao.mapper.UserMapper;
@@ -33,14 +32,15 @@ import static com.example.demo.common.enums.RedisEnums.USER_LOGIN_KEY;
  */
 @Service
 @AllArgsConstructor
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+public class UserServiceImpl implements UserService {
     private final RBloomFilter<String> userRegisterCachePenetrationBloomFilter;
     private final RedissonClient redissonClient;
     private final StringRedisTemplate stringRedisTemplate;
+    private final UserMapper userMapper;
     @Override
     public UserRespDTO getUserByUsername(String username) {
         LambdaQueryWrapper<User> eq = Wrappers.lambdaQuery(User.class).eq(User::getUsername, username);
-        User user = baseMapper.selectOne(eq);
+        User user = null;
         System.out.println(user);
         if(user == null) {
             throw new ClientException(USER_NOT_EXIST);
@@ -61,7 +61,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         try {
             if (lock.tryLock()) {
                 User user = BeanUtil.toBean(requestParam, User.class);
-                if (baseMapper.insert(user) < 1) {
+                if (userMapper.insert(user) < 1) {
                     throw new ClientException(USER_INSERT_FAIL);
                 }
                 userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
@@ -76,11 +76,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public UserLoginRespDTO login(UserLoginReqDTO requestPram) {
-        LambdaQueryWrapper<User> eq = Wrappers.lambdaQuery(User.class)
-                .eq(User::getUsername, requestPram.getUsername())
-                .eq(User::getPassword, requestPram.getPassword())
-                .eq(User::getDelFlag, 0);
-        User user = baseMapper.selectOne(eq);
+        User user = userMapper.selectUserByInfo(requestPram);
         if (user == null) {
             throw new ClientException(USER_LOGIN_FAIL);
         }
@@ -96,6 +92,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Boolean checkLogin(String username, String token) {
         return stringRedisTemplate.opsForHash().hasKey(USER_LOGIN_KEY + username, token);
+    }
+
+    @Override
+    public String logout(String username, String token) {
+        try {
+            Long i = stringRedisTemplate.opsForHash().delete(USER_LOGIN_KEY + username, token);
+        } catch (Exception e) {
+            throw new ClientException(USER_NOT_LOGIN);
+        }
+        return "退出登录成功";
     }
 
 
