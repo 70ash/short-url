@@ -12,6 +12,7 @@ import com.example.demo.dto.req.UserLoginReqDTO;
 import com.example.demo.dto.resp.UserLoginRespDTO;
 import com.example.demo.dto.resp.UserRegisterReqDTO;
 import com.example.demo.dto.resp.UserRespDTO;
+import com.example.demo.service.GroupService;
 import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
 import org.redisson.api.RBloomFilter;
@@ -37,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final RedissonClient redissonClient;
     private final StringRedisTemplate stringRedisTemplate;
     private final UserMapper userMapper;
+    private final GroupService groupService;
     @Override
     public UserRespDTO getUserByUsername(String username) {
         LambdaQueryWrapper<User> eq = Wrappers.lambdaQuery(User.class).eq(User::getUsername, username);
@@ -69,9 +71,10 @@ public class UserServiceImpl implements UserService {
             }
             throw new ClientException(USER_NAME_EXIST);
         }finally {
+            //TODO 用户注册后创建默认短链接分组
+            groupService.saveGroup("默认分组");
             lock.unlock();
         }
-
     }
 
     @Override

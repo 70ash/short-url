@@ -30,7 +30,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void saveGroup(String groupName) {
         String gid;
-        String username = "70ash";
+        String username = "90ash";
         while (true) {
             gid = RandomStringUtil.generateRandomString();
             Group one = groupMapper.selectByGid(username, gid);

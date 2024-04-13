@@ -7,7 +7,9 @@ import com.forzlp.project.common.convention.excetion.ServiceException;
 import com.forzlp.project.dao.entity.Link;
 import com.forzlp.project.dao.mapper.LinkMapper;
 import com.forzlp.project.dto.req.LinkCreateReqDTO;
+import com.forzlp.project.dto.req.LinkSearchReqDTO;
 import com.forzlp.project.dto.resp.LinkCreateRespDTO;
+import com.forzlp.project.dto.resp.LinkSearchRespDTO;
 import com.forzlp.project.service.LinkService;
 import com.forzlp.project.utils.HashUtil;
 import com.forzlp.project.utils.URLParser;
@@ -17,6 +19,7 @@ import org.redisson.api.RBloomFilter;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -69,6 +72,14 @@ public class LinkServiceImpl implements LinkService {
         }
         return linkCreateRespDTO;
     }
+
+    @Override
+    public List<LinkSearchRespDTO> pageShortLink(LinkSearchReqDTO requestParam) {
+        requestParam.setCurrent(requestParam.getCurrent() - 1);
+        List<LinkSearchRespDTO> linkSearchRespDTO = linkMapper.pageLink(requestParam);
+        return linkSearchRespDTO;
+    }
+
     public String generateSuffix(LinkCreateReqDTO requestParam) {
         String domain = URLParser.extractDomain(requestParam.getOriginUrl());
         String path = null;

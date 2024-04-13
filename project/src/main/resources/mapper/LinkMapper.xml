@@ -5,11 +5,25 @@
 <mapper namespace="com.forzlp.project.dao.mapper.LinkMapper">
 
     <insert id="insertLink">
-        INSERT INTO t_link (gid, domain, short_uri, full_short_url, origin_url, click_num, enable_status, valid_type, valid_time, create_time, update_time, del_flag)
+        INSERT INTO t_link (gid, domain, short_uri, full_short_url, origin_url, click_num,  valid_type, valid_time, create_time, update_time, del_flag)
         VALUES
-        (#{gid}, #{domain}, #{shortUrl}, #{fullShortUrl}, #{originUrl}, #{clickNum}, #{enableStatus}, #{validType}, #{validTime}, now(), now() , 0);
+        (#{gid}, #{domain}, #{shortUrl}, #{fullShortUrl}, #{originUrl}, #{clickNum}, #{validType}, #{validTime}, now(), now() , 0);
     </insert>
     <select id="selectByFullShortUrl" resultType="com.forzlp.project.dao.entity.Link">
         select * FROM t_link WHERE full_short_url = #{fullShortUrl} and del_flag = 0;
+    </select>
+    <select id="pageLink" resultType="com.forzlp.project.dto.resp.LinkSearchRespDTO">
+        SELECT
+            gid,
+            domain,
+            short_uri as shortUri,
+            full_short_url AS fullShortUrl,
+            origin_url AS originUrl,
+            click_num AS clickNum,
+            valid_type AS validType,
+            valid_time AS validTime
+        FROM t_link
+        WHERE enable_status = 0 AND del_flag = 0 AND gid = #{gid}
+        LIMIT #{current}, #{size}
     </select>
 </mapper>
