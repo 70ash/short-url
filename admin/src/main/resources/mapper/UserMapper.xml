@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.demo.dao.entity.User">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="username" column="username" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="realName" column="real_name" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="mail" column="mail" jdbcType="VARCHAR"/>
+            <result property="deletionTime" column="deletion_time" jdbcType="BIGINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="delFlag" column="del_flag" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,username,password,
+        real_name,phone,mail,
+        deletion_time,create_time,update_time,
+        del_flag
+    </sql>
+    <insert id="insert">
+        INSERT INTO t_user
+            (username, password, real_name, phone, mail, create_time, update_time)
+        VALUES
+            (#{username}, #{password}, #{realName}, #{phone}, #{mail}, now(), now())
+    </insert>
+    <select id="selectUserByInfo" resultType="com.example.demo.dao.entity.User">
+        SELECT * FROM t_user WHERE username = #{username} AND password = #{password} AND del_flag = 0
+    </select>
+</mapper>
