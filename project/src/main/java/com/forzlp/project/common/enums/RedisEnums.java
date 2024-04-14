@@ -1,11 +1,19 @@
 package com.forzlp.project.common.enums;
 
+import lombok.AllArgsConstructor;
+
 /**
  * @Author 70ash
  * @Date 2024/1/26 23:47
  * @Description:
  */
-public class RedisEnums{
-    public static final String LOCK_USER_REGISTER = "short-link:user_register:";
-    public static final String USER_LOGIN_KEY = "login:";
+@AllArgsConstructor
+public enum RedisEnums{
+    /**
+     * 短链接用户注册常量
+     */
+    LOCK_USER_REGISTER("short-link:user_register:"),
+    USER_LOGIN_KEY("login:");
+
+    private final String value;
 }
