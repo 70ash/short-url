@@ -8,9 +8,9 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @Author 70ash
- * @Date 2024/4/11 22:32
- * @Description:
+ * Author 70ash
+ * Date 2024/4/11 22:32
+ * Description:
  */
 @Data
 public class LinkSearchRespDTO {

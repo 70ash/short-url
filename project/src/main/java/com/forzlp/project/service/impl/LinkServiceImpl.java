@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * @Author 70ash
- * @Date 2024/3/2 13:56
- * @Description:
+ * Author 70ash
+ * Date 2024/3/2 13:56
+ * Description:
  */
 @Service
 @AllArgsConstructor

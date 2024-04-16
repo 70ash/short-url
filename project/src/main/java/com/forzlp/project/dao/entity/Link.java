@@ -10,9 +10,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @Author 70ash
- * @Date 2024/2/29 22:04
- * @Description:
+ * Author 70ash
+ * Date 2024/2/29 22:04
+ * Description:
  */
 @Data
 @Builder
@@ -68,7 +68,7 @@ public class Link extends BaseDO implements Serializable {
 
     /**
      * 有效时间
-     * @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8") 用于前后端Date类型数据传输，使用这个注解后前端传输Date时可以使用字符串
+     * JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8") 用于前后端Date类型数据传输，使用这个注解后前端传输Date时可以使用字符串
      */
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date validTime;

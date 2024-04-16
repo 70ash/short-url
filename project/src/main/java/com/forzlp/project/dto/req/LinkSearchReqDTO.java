@@ -3,9 +3,9 @@ package com.forzlp.project.dto.req;
 import lombok.Data;
 
 /**
- * @Author 70ash
- * @Date 2024/4/11 22:30
- * @Description:
+ * Author 70ash
+ * Date 2024/4/11 22:30
+ * Description:
  */
 @Data
 public class LinkSearchReqDTO {

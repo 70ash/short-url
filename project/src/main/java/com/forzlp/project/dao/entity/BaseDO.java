@@ -7,9 +7,9 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @Author 70ash
- * @Date 2024/2/20 16:39
- * @Description:
+ * Author 70ash
+ * Date 2024/2/20 16:39
+ * Description:
  */
 @Data
 public class BaseDO {

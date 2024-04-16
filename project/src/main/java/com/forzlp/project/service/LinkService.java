@@ -10,9 +10,9 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 /**
- * @Author 70ash
- * @Date 2024/3/2 13:56
- * @Description:
+ * Author 70ash
+ * Date 2024/3/2 13:56
+ * Description:
  */
 public interface LinkService {
     /**

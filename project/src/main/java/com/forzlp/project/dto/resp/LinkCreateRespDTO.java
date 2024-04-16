@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * @Author 70ash
- * @Date 2024/3/2 14:09
- * @Description:
+ * Author 70ash
+ * Date 2024/3/2 14:09
+ * Description:
  */
 @Data
 @AllArgsConstructor

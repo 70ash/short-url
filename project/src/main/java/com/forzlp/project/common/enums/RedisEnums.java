@@ -2,11 +2,14 @@ package com.forzlp.project.common.enums;
 
 import lombok.AllArgsConstructor;
 
+
+
 /**
- * @Author 70ash
- * @Date 2024/1/26 23:47
- * @Description:
+ * Author 70ash
+ * Date 2024/1/26 23:47
+ * Description:
  */
+
 @AllArgsConstructor
 public enum RedisEnums{
     /**
