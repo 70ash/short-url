@@ -4,7 +4,9 @@ package com.forzlp.project.service.impl;
 import com.forzlp.project.common.convention.errorcode.BaseErrorCode;
 import com.forzlp.project.common.convention.excetion.ClientException;
 import com.forzlp.project.common.convention.excetion.ServiceException;
+import com.forzlp.project.dao.entity.Goto;
 import com.forzlp.project.dao.entity.Link;
+import com.forzlp.project.dao.mapper.GotoMapper;
 import com.forzlp.project.dao.mapper.LinkMapper;
 import com.forzlp.project.dto.req.LinkCreateReqDTO;
 import com.forzlp.project.dto.req.LinkSearchReqDTO;
@@ -33,6 +35,7 @@ import java.util.UUID;
 public class LinkServiceImpl implements LinkService {
     private final LinkMapper linkMapper;
     private RBloomFilter shortUrlCreateCachePenetrationBloomFilter;
+    private GotoMapper gotoMapper;
     @Override
     public LinkCreateRespDTO saveLink(LinkCreateReqDTO requestParam){
         // 协议
@@ -62,8 +65,13 @@ public class LinkServiceImpl implements LinkService {
                 .clickNum(0)
                 .enableStatus(null)
                 .build();
+        Goto build = Goto.builder()
+                .gid(requestParam.getGid())
+                .fullShortUrl(fullShortUrl)
+                .build();
         try {
             linkMapper.insertLink(link);
+            gotoMapper.insertGoto(build);
             // 加入到布隆过滤器
             shortUrlCreateCachePenetrationBloomFilter.add(fullShortUrl);
         }catch (DuplicateKeyException ex) {
