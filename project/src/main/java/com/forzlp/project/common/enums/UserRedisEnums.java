@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
  */
 
 @AllArgsConstructor
-public enum RedisEnums{
+public enum UserRedisEnums {
     /**
      * 短链接用户注册常量
      */
