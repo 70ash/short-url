@@ -124,11 +124,17 @@ public class LinkServiceImpl implements LinkService {
     public void restore(String shortUri, HttpServletRequest request, HttpServletResponse response) throws IOException {
         String serverName = request.getServerName();
         int serverPort = request.getServerPort();
+        String fullShortUrl = defaultDomain + "/" + shortUri;
         // 从redis之中获取
         String originUrl = stringRedisTemplate.opsForValue().get(String.format(LINK_GOTO_KEY, shortUri));
         // 如果获取的原始链接不为空，那么就进行跳转
         if (StrUtil.isNotEmpty(originUrl)) {
             response.sendRedirect(originUrl);
+            return;
+        }
+        // 查询布隆过滤器
+        boolean contains = shortUrlCreateCachePenetrationBloomFilter.contains(fullShortUrl);
+        if (!contains) {
             return;
         }
         // 对单个短链接加锁
