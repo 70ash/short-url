@@ -1,6 +1,7 @@
 package com.forzlp.project.service.impl;
 
 
+import cn.hutool.core.util.StrUtil;
 import com.forzlp.project.common.convention.errorcode.BaseErrorCode;
 import com.forzlp.project.common.convention.excetion.ClientException;
 import com.forzlp.project.common.convention.excetion.ServiceException;
@@ -15,14 +16,24 @@ import com.forzlp.project.dto.resp.LinkSearchRespDTO;
 import com.forzlp.project.service.LinkService;
 import com.forzlp.project.utils.HashUtil;
 import com.forzlp.project.utils.URLParser;
-import lombok.AllArgsConstructor;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBloomFilter;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+
+import static com.forzlp.project.common.constant.LinkRedisEnums.LINK_GOTO_KEY;
+import static com.forzlp.project.common.constant.LinkRedisEnums.LOCK_LINK_GOTO_KEY;
 
 /**
  * Author 70ash
@@ -30,12 +41,24 @@ import java.util.UUID;
  * Description:
  */
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class LinkServiceImpl implements LinkService {
     private final LinkMapper linkMapper;
-    private RBloomFilter shortUrlCreateCachePenetrationBloomFilter;
-    private GotoMapper gotoMapper;
+    private final RBloomFilter shortUrlCreateCachePenetrationBloomFilter;
+    private final StringRedisTemplate stringRedisTemplate;
+    private final RedissonClient redissonClient;
+    private final GotoMapper gotoMapper;
+
+    @Value("${short-link.domain.default}")
+    private String defaultDomain;
+    /**
+     *
+     * @param requestParam 创建短链接参数
+     * @return 创建短链接返回参数
+     * 获取参数信息，生成六位数随机数，拼接获得完整短链接(协议+域名+短链接)
+     * 入库，把完整短链接插入布隆过滤器，根据短链接和分组标识插入路由表，后续用户输入短链接由路由表获取分组标识查询原始链接
+     */
     @Override
     public LinkCreateRespDTO saveLink(LinkCreateReqDTO requestParam){
         // 协议
@@ -45,9 +68,11 @@ public class LinkServiceImpl implements LinkService {
         // 路径
         String path = generateSuffix(requestParam);
         // 获取完整短链接
-        String fullShortUrl = protocol + "://" + domain + "/" + path;
+        String fullShortUrl = defaultDomain + "/" + path;
+        String gid = requestParam.getGid();
+        if (gid == null) {}//TODO 获取用户默认分组标识
         LinkCreateRespDTO linkCreateRespDTO = LinkCreateRespDTO.builder()
-                .gid(requestParam.getGid())
+                .gid(gid)
                 .originUrl(requestParam.getOriginUrl())
                 .fullShortUrl(fullShortUrl)
                 .validType(requestParam.getValidType())
@@ -63,16 +88,19 @@ public class LinkServiceImpl implements LinkService {
                 .validType(requestParam.getValidType())
                 .validTime(requestParam.getValidTime())
                 .clickNum(0)
-                .enableStatus(null)
+                .enableStatus(0)
                 .build();
         Goto build = Goto.builder()
                 .gid(requestParam.getGid())
-                .fullShortUrl(fullShortUrl)
+                .shortUri(path)
                 .build();
         try {
             linkMapper.insertLink(link);
             gotoMapper.insertGoto(build);
             // 加入到布隆过滤器
+            // 存入redis
+            String format = String.format(LINK_GOTO_KEY, path);
+            stringRedisTemplate.opsForValue().set(format, requestParam.getOriginUrl());
             shortUrlCreateCachePenetrationBloomFilter.add(fullShortUrl);
         }catch (DuplicateKeyException ex) {
             log.warn("短链接频繁创建，请稍后再试");
@@ -88,6 +116,52 @@ public class LinkServiceImpl implements LinkService {
         return linkSearchRespDTO;
     }
 
+    /**
+     * @param shortUri 短链接
+     * 查路由表获取分组标识，由分组标识和短链接查询原始短链接并跳转
+     */
+    @Override
+    public void restore(String shortUri, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
+        // 从redis之中获取
+        String originUrl = stringRedisTemplate.opsForValue().get(String.format(LINK_GOTO_KEY, shortUri));
+        // 如果获取的原始链接不为空，那么就进行跳转
+        if (StrUtil.isNotEmpty(originUrl)) {
+            response.sendRedirect(originUrl);
+            return;
+        }
+        // 对单个短链接加锁
+        RLock lock = redissonClient.getLock(String.format(LOCK_LINK_GOTO_KEY, shortUri));
+        lock.lock();
+        // 使用try--finally保证锁的释放
+        try {
+            // 双重判定锁
+            originUrl = stringRedisTemplate.opsForValue().get(String.format(LINK_GOTO_KEY, shortUri));
+            // 如果获取的原始链接不为空，那么就进行跳转
+            if (StrUtil.isNotEmpty(originUrl)) {
+                response.sendRedirect(originUrl);
+                return;
+            }
+
+            // 获取分组标识
+            String gid = linkMapper.gotoByUri(shortUri);
+            // 由分组标识和原始短链接进行跳转
+            originUrl = linkMapper.selectOriginUrlByUriAndGid(shortUri, gid);
+            // 存到redis之中
+            stringRedisTemplate.opsForValue().set(String.format(LINK_GOTO_KEY, shortUri), originUrl);
+            response.sendRedirect(originUrl);
+        }finally {
+            lock.unlock();
+        }
+    }
+
+    /**
+     *
+     * @param requestParam 短链接新增参数
+     * @return 六位短链接
+     * 获取短链接域名，获取原始链接拼接UUID，使用哈希函数转换为Base62的六位随机数，拼接域名和随机数，判断是否为空，如果已创建则再次生成短链接。未创建则返回六位随机数
+     */
     public String generateSuffix(LinkCreateReqDTO requestParam) {
         String domain = URLParser.extractDomain(requestParam.getOriginUrl());
         String path = null;

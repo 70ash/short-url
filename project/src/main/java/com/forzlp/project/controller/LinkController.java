@@ -24,6 +24,10 @@ import java.util.List;
 @RequestMapping("/short-link/link")
 public class LinkController {
     private LinkService linkService;
+
+    /**
+     * 新增短链接
+     */
     @PostMapping("/create")
     public Result<LinkCreateRespDTO> saveLink(@RequestBody LinkCreateReqDTO requestParam) throws URISyntaxException {
         LinkCreateRespDTO linkCreateRespDTO = linkService.saveLink(requestParam);

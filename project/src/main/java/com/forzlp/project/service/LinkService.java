@@ -5,7 +5,10 @@ import com.forzlp.project.dto.req.LinkCreateReqDTO;
 import com.forzlp.project.dto.req.LinkSearchReqDTO;
 import com.forzlp.project.dto.resp.LinkCreateRespDTO;
 import com.forzlp.project.dto.resp.LinkSearchRespDTO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -23,4 +26,6 @@ public interface LinkService {
     LinkCreateRespDTO saveLink(LinkCreateReqDTO requestParam) throws URISyntaxException;
 
     List<LinkSearchRespDTO> pageShortLink(LinkSearchReqDTO requestParam);
+
+    void restore(String shortUri, HttpServletRequest request, HttpServletResponse response) throws IOException;
 }

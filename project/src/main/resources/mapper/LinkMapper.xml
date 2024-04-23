@@ -26,4 +26,21 @@
         WHERE enable_status = 0 AND del_flag = 0 AND gid = #{gid}
         LIMIT #{current}, #{size}
     </select>
+    <select id="selectOriginUrlByUriAndGid" resultType="java.lang.String">
+        SELECT
+            origin_url
+        FROM
+            t_link
+        WHERE
+            short_uri = #{shortUri}
+          AND gid = #{gid}
+    </select>
+    <select id="gotoByUri" resultType="java.lang.String">
+        SELECT
+            gid
+        FROM
+            t_link
+        WHERE
+            short_uri = #{shortUri}
+    </select>
 </mapper>
