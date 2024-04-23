@@ -5,6 +5,6 @@
 <mapper namespace="com.forzlp.project.dao.mapper.GotoMapper">
 
     <insert id="insertGoto">
-        INSERT INTO t_goto ()
+        INSERT INTO t_goto () VALUES (#{gid}, #{shortUri})
     </insert>
 </mapper>

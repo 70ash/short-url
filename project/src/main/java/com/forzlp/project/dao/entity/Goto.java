@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Goto {
-    private Integer id;
     private String gid;
-    private String fullShortUrl;
+    private String shortUri;
 }
