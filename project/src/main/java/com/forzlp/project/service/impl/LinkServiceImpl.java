@@ -15,6 +15,7 @@ import com.forzlp.project.dto.resp.LinkCreateRespDTO;
 import com.forzlp.project.dto.resp.LinkSearchRespDTO;
 import com.forzlp.project.service.LinkService;
 import com.forzlp.project.utils.HashUtil;
+import com.forzlp.project.utils.LinkUtil;
 import com.forzlp.project.utils.URLParser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,9 +32,10 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
-import static com.forzlp.project.common.constant.LinkRedisEnums.LINK_GOTO_KEY;
-import static com.forzlp.project.common.constant.LinkRedisEnums.LOCK_LINK_GOTO_KEY;
+import static com.forzlp.project.common.constant.LinkRedisConstant.LINK_GOTO_KEY;
+import static com.forzlp.project.common.constant.LinkRedisConstant.LOCK_LINK_GOTO_KEY;
 
 /**
  * Author 70ash
@@ -98,9 +100,8 @@ public class LinkServiceImpl implements LinkService {
             linkMapper.insertLink(link);
             gotoMapper.insertGoto(build);
             // 加入到布隆过滤器
-            // 存入redis
-            String format = String.format(LINK_GOTO_KEY, path);
-            stringRedisTemplate.opsForValue().set(format, requestParam.getOriginUrl());
+            // 存入redis作缓存预热,
+            stringRedisTemplate.opsForValue().set(String.format(LINK_GOTO_KEY, path), requestParam.getOriginUrl(), LinkUtil.getLinkCacheValidTime(requestParam.getValidTime()), TimeUnit.MILLISECONDS);
             shortUrlCreateCachePenetrationBloomFilter.add(fullShortUrl);
         }catch (DuplicateKeyException ex) {
             log.warn("短链接频繁创建，请稍后再试");
@@ -153,14 +154,17 @@ public class LinkServiceImpl implements LinkService {
             // 获取分组标识
             String gid = linkMapper.gotoByUri(shortUri);
             // 由分组标识和原始短链接进行跳转
-            originUrl = linkMapper.selectOriginUrlByUriAndGid(shortUri, gid);
-            // 存到redis之中
-            stringRedisTemplate.opsForValue().set(String.format(LINK_GOTO_KEY, shortUri), originUrl);
-            response.sendRedirect(originUrl);
+            Link link = linkMapper.selectLinkByUriAndGid(shortUri, gid);
+            if (link != null) {
+                originUrl = link.getOriginUrl();
+                stringRedisTemplate.opsForValue().set(String.format(LINK_GOTO_KEY, shortUri), originUrl, LinkUtil.getLinkCacheValidTime(link.getValidTime()), TimeUnit.MILLISECONDS);
+                response.sendRedirect(originUrl);
+            }
         }finally {
             lock.unlock();
         }
     }
+
 
     /**
      *
