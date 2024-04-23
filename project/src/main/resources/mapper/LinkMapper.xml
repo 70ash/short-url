@@ -43,4 +43,9 @@
         WHERE
             short_uri = #{shortUri}
     </select>
+    <select id="selectLinkByUriAndGid" resultType="com.forzlp.project.dao.entity.Link">
+        SELECT * FROM t_link WHERE
+            short_uri = #{shortUri}
+                               AND gid = #{gid}
+    </select>
 </mapper>

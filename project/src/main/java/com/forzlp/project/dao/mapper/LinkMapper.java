@@ -22,4 +22,6 @@ public interface LinkMapper {
     List<LinkSearchRespDTO> pageLink(LinkSearchReqDTO requestParam);
 
     String selectOriginUrlByUriAndGid(@Param("shortUri") String shortUri, @Param("gid") String gid);
+
+    Link selectLinkByUriAndGid(@Param("shortUri") String shortUri, @Param("gid") String gid);
 }
