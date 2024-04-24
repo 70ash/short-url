@@ -24,4 +24,6 @@ public interface LinkMapper {
     String selectOriginUrlByUriAndGid(@Param("shortUri") String shortUri, @Param("gid") String gid);
 
     Link selectLinkByUriAndGid(@Param("shortUri") String shortUri, @Param("gid") String gid);
+
+    int updateStatusByShortUri(@Param("gid") String gid, @Param("shortUri")String shortUri);
 }

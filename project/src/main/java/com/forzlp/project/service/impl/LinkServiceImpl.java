@@ -19,7 +19,11 @@ import com.forzlp.project.utils.URLParser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -28,6 +32,8 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -84,6 +90,7 @@ public class LinkServiceImpl implements LinkService {
                 .originUrl(requestParam.getOriginUrl())
                 .shortUrl(path)
                 .fullShortUrl(fullShortUrl)
+                .favicon(extractIconUrl(requestParam.getOriginUrl()))
                 .validType(requestParam.getValidType())
                 .validTime(requestParam.getValidTime())
                 .clickNum(0)
@@ -178,6 +185,29 @@ public class LinkServiceImpl implements LinkService {
             lock.unlock();
         }
     }
+
+    /**
+     * 获取网站图标
+     * @param urlString 网站地址
+     * @return 网站图标地址
+     */
+    @SneakyThrows
+    public String extractIconUrl(String urlString) {
+        URL targetUrl = new URL(urlString);
+        HttpURLConnection connection = (HttpURLConnection) targetUrl.openConnection();
+        connection.setRequestMethod("GET");
+        connection.connect();
+        int responseCode = connection.getResponseCode();
+        if (HttpURLConnection.HTTP_OK == responseCode) {
+            Document document = Jsoup.connect(urlString).get();
+            Element faviconLink = document.select("link[rel~=(?i)^(shortcut )?icon]").first();
+            if (faviconLink != null) {
+                return faviconLink.attr("abs:href");
+            }
+        }
+        return null;
+    }
+
     /**
      *
      * @param requestParam 短链接新增参数

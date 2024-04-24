@@ -9,6 +9,15 @@
         VALUES
         (#{gid}, #{domain}, #{shortUrl}, #{fullShortUrl}, #{originUrl}, #{clickNum}, #{validType}, #{validTime}, now(), now() , 0);
     </insert>
+    <update id="updateStatusByShortUri">
+        UPDATE t_link
+        SET enable_status = 1
+        WHERE
+            gid = #{gid}
+          AND short_uri = #{shortUri}
+          AND enable_status = 0
+          AND del_flag = 0
+    </update>
     <select id="selectByFullShortUrl" resultType="com.forzlp.project.dao.entity.Link">
         select * FROM t_link WHERE full_short_url = #{fullShortUrl} and del_flag = 0;
     </select>
