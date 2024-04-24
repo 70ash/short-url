@@ -1,6 +1,5 @@
 package com.forzlp.project.service.impl;
 
-
 import cn.hutool.core.util.StrUtil;
 import com.forzlp.project.common.convention.errorcode.BaseErrorCode;
 import com.forzlp.project.common.convention.excetion.ClientException;
@@ -28,14 +27,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import static com.forzlp.project.common.constant.LinkRedisConstant.LINK_GOTO_KEY;
-import static com.forzlp.project.common.constant.LinkRedisConstant.LOCK_LINK_GOTO_KEY;
+import static com.forzlp.project.common.constant.LinkRedisConstant.*;
 
 /**
  * Author 70ash
@@ -101,7 +98,12 @@ public class LinkServiceImpl implements LinkService {
             gotoMapper.insertGoto(build);
             // 加入到布隆过滤器
             // 存入redis作缓存预热,
-            stringRedisTemplate.opsForValue().set(String.format(LINK_GOTO_KEY, path), requestParam.getOriginUrl(), LinkUtil.getLinkCacheValidTime(requestParam.getValidTime()), TimeUnit.MILLISECONDS);
+            Long linkCacheValidTime = LinkUtil.getLinkCacheValidTime(requestParam.getValidTime());
+            stringRedisTemplate.opsForValue().set(
+                    String.format(LINK_GOTO_KEY, path),
+                    requestParam.getOriginUrl(),
+                    linkCacheValidTime, TimeUnit.MILLISECONDS);
+
             shortUrlCreateCachePenetrationBloomFilter.add(fullShortUrl);
         }catch (DuplicateKeyException ex) {
             log.warn("短链接频繁创建，请稍后再试");
@@ -123,8 +125,6 @@ public class LinkServiceImpl implements LinkService {
      */
     @Override
     public void restore(String shortUri, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String serverName = request.getServerName();
-        int serverPort = request.getServerPort();
         String fullShortUrl = defaultDomain + "/" + shortUri;
         // 从redis之中获取
         String originUrl = stringRedisTemplate.opsForValue().get(String.format(LINK_GOTO_KEY, shortUri));
@@ -136,6 +136,13 @@ public class LinkServiceImpl implements LinkService {
         // 查询布隆过滤器
         boolean contains = shortUrlCreateCachePenetrationBloomFilter.contains(fullShortUrl);
         if (!contains) {
+            response.sendRedirect("/page/notfound");
+            return;
+        }
+        // 如果判断是否是空uri，如果是，返回一个空值
+        String LinkIsNull = stringRedisTemplate.opsForValue().get(String.format(LINK_GOTO_IS_NULL_KEY, shortUri));
+        if (StrUtil.isNotEmpty(LinkIsNull)) {
+            response.sendRedirect("/page/notfound");
             return;
         }
         // 对单个短链接加锁
@@ -150,7 +157,11 @@ public class LinkServiceImpl implements LinkService {
                 response.sendRedirect(originUrl);
                 return;
             }
-
+            LinkIsNull = stringRedisTemplate.opsForValue().get(String.format(LINK_GOTO_IS_NULL_KEY, shortUri));
+            if (StrUtil.isNotEmpty(LinkIsNull)) {
+                response.sendRedirect("/page/notfound");
+                return;
+            }
             // 获取分组标识
             String gid = linkMapper.gotoByUri(shortUri);
             // 由分组标识和原始短链接进行跳转
@@ -159,13 +170,14 @@ public class LinkServiceImpl implements LinkService {
                 originUrl = link.getOriginUrl();
                 stringRedisTemplate.opsForValue().set(String.format(LINK_GOTO_KEY, shortUri), originUrl, LinkUtil.getLinkCacheValidTime(link.getValidTime()), TimeUnit.MILLISECONDS);
                 response.sendRedirect(originUrl);
+            } else { // 如果数据库中不存在，缓存一个空值
+                stringRedisTemplate.opsForValue().set(String.format(LOCK_LINK_GOTO_KEY, shortUri), "-", LINK_GOTO_NULL_TIME_KEY, TimeUnit.SECONDS);
+                response.sendRedirect("/page/notfound");
             }
         }finally {
             lock.unlock();
         }
     }
-
-
     /**
      *
      * @param requestParam 短链接新增参数
