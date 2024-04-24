@@ -6,4 +6,6 @@ package com.forzlp.project.service;
  * Description:
  */
 public interface LinkTitleService {
+    String extractTitle(String urlString);
+    String extractIconUrl(String urlString);
 }

@@ -1,6 +1,11 @@
 package com.forzlp.project.service.impl;
 
 import com.forzlp.project.service.LinkTitleService;
+import lombok.SneakyThrows;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,6 +20,7 @@ import java.util.regex.Pattern;
  * Date 2024/4/23 下午8:04
  * Description:
  */
+@Service
 public class LinkTitleServiceImpl implements LinkTitleService {
 
     public String extractTitle(String urlString) {
@@ -32,6 +38,22 @@ public class LinkTitleServiceImpl implements LinkTitleService {
             e.printStackTrace();
             return "Error";
         }
+    }
+    @SneakyThrows
+    public String extractIconUrl(String urlString) {
+         URL targetUrl = new URL(urlString);
+         HttpURLConnection connection = (HttpURLConnection) targetUrl.openConnection();
+         connection.setRequestMethod("GET");
+         connection.connect();
+         int responseCode = connection.getResponseCode();
+         if (HttpURLConnection.HTTP_OK == responseCode) {
+             Document document = Jsoup.connect(urlString).get();
+             Element faviconLink = document.select("link[rel~=(?i)^(shortcut )?icon]").first();
+             if (faviconLink != null) {
+                 return faviconLink.attr("abs:href");
+             }
+         }
+         return null;
     }
 
     private String getString(String urlString) throws IOException {
