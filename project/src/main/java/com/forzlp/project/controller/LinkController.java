@@ -21,20 +21,19 @@ import java.util.List;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/short-link/link")
 public class LinkController {
     private LinkService linkService;
 
     /**
      * 新增短链接
      */
-    @PostMapping("/create")
+    @PostMapping("/short-link/link/create")
     public Result<LinkCreateRespDTO> saveLink(@RequestBody LinkCreateReqDTO requestParam) throws URISyntaxException {
         LinkCreateRespDTO linkCreateRespDTO = linkService.saveLink(requestParam);
         return Results.success(linkCreateRespDTO);
     }
 
-    @GetMapping("/page")
+    @GetMapping("/short-link/link/page")
     public Result<List<LinkSearchRespDTO>> pageShortLink(LinkSearchReqDTO requestParam) {
         return Results.success(linkService.pageShortLink(requestParam));
     }

@@ -13,6 +13,7 @@ import static com.forzlp.project.common.constant.LinkConstant.DEFAULT_VALID_TIME
  * Date 2024/4/23 下午5:57
  * Description: 短链接缓存时间工具类
  */
+
 public class LinkUtil {
     /**
      * 获取短链接缓存有效时间
@@ -21,7 +22,7 @@ public class LinkUtil {
      */
     public static Long getLinkCacheValidTime(Date validDate) {
         return Optional.ofNullable(validDate)
-                .map(each -> DateUtil.between(new Date(), validDate, DateUnit.SECOND))
+                .map(each -> DateUtil.between(new Date(), each, DateUnit.MS))
                 .orElse(DEFAULT_VALID_TIME);
     }
 }

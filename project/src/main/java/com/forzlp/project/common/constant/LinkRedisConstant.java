@@ -8,4 +8,7 @@ package com.forzlp.project.common.constant;
 public class LinkRedisConstant {
     public static final String LINK_GOTO_KEY = "short-link:goto:%s";
     public static final String LOCK_LINK_GOTO_KEY = "short-link:lock:goto:%s";
+    public static final String LINK_GOTO_IS_NULL_KEY = "short-link:null:goto:%s";
+
+    public static final Long LINK_GOTO_NULL_TIME_KEY = 30L;
 }
