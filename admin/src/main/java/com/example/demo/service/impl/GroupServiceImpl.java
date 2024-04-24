@@ -1,9 +1,11 @@
 package com.example.demo.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.example.demo.common.convention.excetion.ClientException;
 import com.example.demo.common.convention.excetion.ServiceException;
 import com.example.demo.dao.entity.Group;
 import com.example.demo.dao.mapper.GroupMapper;
+import com.example.demo.dto.dto.ListGroupDTO;
 import com.example.demo.dto.req.UpdateGroupReqDTO;
 import com.example.demo.dto.resp.ListGroupRespDTO;
 import com.example.demo.dto.resp.ListLinkRespDTO;
@@ -53,9 +55,21 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public List<ListGroupRespDTO> listGroup() {
         // TODO 后续从网关中获取username
-        String username = "小明";
-        List<ListGroupRespDTO> list = groupMapper.selectBatchByUserName(username);
-        return list;
+        String username = "90ash";
+        List<ListGroupDTO> list = groupMapper.selectBatchByUserName(username);
+        // List<ListGroupRespDTO> listGroupRespDTOList = new ArrayList<>();
+        // for (ListGroupDTO item : list) {
+        //     String gid = item.getGid();
+        //     Integer count = groupMapper.countByGid(gid);
+        //     listGroupRespDTOList.add(ListGroupRespDTO.builder()
+        //                     .gid(gid)
+        //                     .name(item.getName())
+        //                     .sortOrder(item.getSortOrder())
+        //                     .shortLinkCount(count)
+        //             .build()
+        //     );
+        // }
+        return BeanUtil.copyToList(list, ListGroupRespDTO.class);
     }
 
     @Override
