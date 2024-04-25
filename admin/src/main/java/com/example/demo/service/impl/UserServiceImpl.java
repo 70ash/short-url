@@ -27,9 +27,9 @@ import static com.example.demo.common.enums.RedisEnums.LOCK_USER_REGISTER;
 import static com.example.demo.common.enums.RedisEnums.USER_LOGIN_KEY;
 
 /**
- * @Author 70ash
- * @Date 2024/1/25 11:58
- * @Description:
+ * Author 70ash
+ * Date 2024/1/25 11:58
+ * Description:
  */
 @Service
 @AllArgsConstructor

@@ -3,9 +3,9 @@ package com.example.demo.dto.resp;
 import lombok.Data;
 
 /**
- * @Author 70ash
- * @Date 2024/1/26 23:12
- * @Description:
+ * Author 70ash
+ * Date 2024/1/26 23:12
+ * Description:
  */
 @Data
 public class UserRegisterReqDTO {

@@ -1,9 +1,9 @@
 package com.example.demo.common.convention.errorcode;
 
 /**
- * @Author 70ash
- * @Date 2024/1/24 23:18
- * @Description:
+ * Author 70ash
+ * Date 2024/1/24 23:18
+ * Description:
  */
 public enum BaseErrorCode implements IErrorCode{
     CLIENT_ERROR("A00001", "用户端错误"),

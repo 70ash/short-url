@@ -13,9 +13,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @Author 70ash
- * @Date 2024/1/24 23:28
- * @Description:
+ * Author 70ash
+ * Date 2024/1/24 23:28
+ * Description:
  */
 @RestController
 @RequestMapping("/short-link/user")

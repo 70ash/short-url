@@ -19,9 +19,9 @@ import java.util.List;
 import static com.example.demo.common.convention.errorcode.BaseErrorCode.USER_GROUP_EXIST;
 
 /**
- * @Author 70ash
- * @Date 2024/2/20 16:43
- * @Description:
+ * Author 70ash
+ * Date 2024/2/20 16:43
+ * Description:
  */
 @Service
 @AllArgsConstructor

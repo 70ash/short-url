@@ -6,9 +6,9 @@ import com.example.demo.dto.resp.UserRegisterReqDTO;
 import com.example.demo.dto.resp.UserRespDTO;
 
 /**
- * @Author 70ash
- * @Date 2024/1/25 11:57
- * @Description:
+ * Author 70ash
+ * Date 2024/1/25 11:57
+ * Description:
  */
 public interface UserService{
     UserRespDTO getUserByUsername(String username);

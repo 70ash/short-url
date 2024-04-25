@@ -19,13 +19,16 @@ import java.util.List;
  */
 public interface LinkService {
     /**
-     *
-     * @param requestParam 创建短链接相关参数
-     * @return 创建短链接返回相关参数
+     * 创建短链接
      */
     LinkCreateRespDTO saveLink(LinkCreateReqDTO requestParam) throws URISyntaxException;
-
+    /**
+     * 分页查询短链接
+     */
     List<LinkSearchRespDTO> pageShortLink(LinkSearchReqDTO requestParam);
 
+    /**
+     * 短链接跳转
+     */
     void restore(String shortUri, HttpServletRequest request, HttpServletResponse response) throws IOException;
 }

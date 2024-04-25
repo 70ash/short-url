@@ -7,9 +7,9 @@ import com.example.demo.dto.resp.ListLinkRespDTO;
 import java.util.List;
 
 /**
- * @Author 70ash
- * @Date 2024/2/20 16:43
- * @Description:
+ * Author 70ash
+ * Date 2024/2/20 16:43
+ * Description:
  */
 public interface GroupService{
     // 新增短链接分组

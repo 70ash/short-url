@@ -8,9 +8,9 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- * @Author 70ash
- * @Date 2024/2/20 16:42
- * @Description:
+ * Author 70ash
+ * Date 2024/2/20 16:42
+ * Description:
  */
 public interface GroupMapper{
     Group selectByGid(@Param("username") String username, @Param("gid") String gid);

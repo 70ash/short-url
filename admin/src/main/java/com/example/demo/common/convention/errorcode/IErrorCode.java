@@ -1,9 +1,9 @@
 package com.example.demo.common.convention.errorcode;
 
 /**
- * @Author 70ash
- * @Date 2024/1/24 23:15
- * @Description:
+ * Author 70ash
+ * Date 2024/1/24 23:15
+ * Description:
  */
 public interface IErrorCode {
     /**

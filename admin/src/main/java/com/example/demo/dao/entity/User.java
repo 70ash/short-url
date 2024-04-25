@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 /**
  * 
- * @TableName t_user
+ * TableName t_user
  */
 @TableName(value ="t_user")
 @Data

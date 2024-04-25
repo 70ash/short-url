@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.Optional;
 
 /**
- * @Author 70ash
- * @Date 2024/1/24 23:08
- * @Description: 全局异常拦截器
+ * Author 70ash
+ * Date 2024/1/24 23:08
+ * Description: 全局异常拦截器
  */
 @RestControllerAdvice
 @Slf4j

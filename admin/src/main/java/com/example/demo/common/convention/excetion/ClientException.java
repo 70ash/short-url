@@ -5,9 +5,9 @@ import com.example.demo.common.convention.errorcode.IErrorCode;
 import static com.example.demo.common.convention.errorcode.BaseErrorCode.CLIENT_ERROR;
 
 /**
- * @Author 70ash
- * @Date 2024/1/24 23:06
- * @Description:
+ * Author 70ash
+ * Date 2024/1/24 23:06
+ * Description:
  */
 public class ClientException extends AbstractException{
     public ClientException(String message) {

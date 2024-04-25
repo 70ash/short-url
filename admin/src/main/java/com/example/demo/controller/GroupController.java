@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * @Author 70ash
- * @Date 2024/2/20 21:30
- * @Description:
+ * Author 70ash
+ * Date 2024/2/20 21:30
+ * Description:
  */
 @RestController
 @RequestMapping("/short-link/group")

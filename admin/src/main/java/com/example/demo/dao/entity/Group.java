@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * @Author 70ash
- * @Date 2024/2/20 16:37
- * @Description:
+ * Author 70ash
+ * Date 2024/2/20 16:37
+ * Description:
  */
 @Data
 @Builder

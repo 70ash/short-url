@@ -5,9 +5,9 @@ import com.example.demo.common.convention.excetion.AbstractException;
 import static com.example.demo.common.convention.errorcode.BaseErrorCode.SERVICE_ERROR;
 
 /**
- * @Author 70ash
- * @Date 2024/1/24 22:54
- * @Description:
+ * Author 70ash
+ * Date 2024/1/24 22:54
+ * Description:
  */
 public class Results {
     public static <T> Result<T> success(T data) {

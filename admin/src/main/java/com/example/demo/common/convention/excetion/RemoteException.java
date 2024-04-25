@@ -5,9 +5,9 @@ import com.example.demo.common.convention.errorcode.IErrorCode;
 import static com.example.demo.common.convention.errorcode.BaseErrorCode.REMOTE_ERROR;
 
 /**
- * @Author 70ash
- * @Date 2024/1/24 23:07
- * @Description:
+ * Author 70ash
+ * Date 2024/1/24 23:07
+ * Description:
  */
 public class RemoteException extends AbstractException{
     public RemoteException(String message) {
