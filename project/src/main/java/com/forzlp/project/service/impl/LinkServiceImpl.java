@@ -1,13 +1,16 @@
 package com.forzlp.project.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.forzlp.project.common.convention.errorcode.BaseErrorCode;
 import com.forzlp.project.common.convention.excetion.ClientException;
 import com.forzlp.project.common.convention.excetion.ServiceException;
 import com.forzlp.project.dao.entity.Goto;
 import com.forzlp.project.dao.entity.Link;
+import com.forzlp.project.dao.entity.LinkStats;
 import com.forzlp.project.dao.mapper.GotoMapper;
 import com.forzlp.project.dao.mapper.LinkMapper;
+import com.forzlp.project.dao.mapper.LinkStatsMapper;
 import com.forzlp.project.dto.req.LinkCreateReqDTO;
 import com.forzlp.project.dto.req.LinkSearchReqDTO;
 import com.forzlp.project.dto.resp.LinkCreateRespDTO;
@@ -31,9 +34,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -54,6 +59,7 @@ public class LinkServiceImpl implements LinkService {
     private final StringRedisTemplate stringRedisTemplate;
     private final RedissonClient redissonClient;
     private final GotoMapper gotoMapper;
+    private final LinkStatsMapper linkStatsMapper;
 
     @Value("${short-link.domain.default}")
     private String defaultDomain;
@@ -100,9 +106,14 @@ public class LinkServiceImpl implements LinkService {
                 .gid(requestParam.getGid())
                 .shortUri(path)
                 .build();
+        LinkStats linkStats = LinkStats.builder()
+                .gid(gid)
+                .shortUri(path)
+                .build();
         try {
             linkMapper.insertLink(link);
             gotoMapper.insertGoto(build);
+            linkStatsMapper.insertLinkStats(linkStats);
             // 加入到布隆过滤器
             // 存入redis作缓存预热,
             Long linkCacheValidTime = LinkUtil.getLinkCacheValidTime(requestParam.getValidTime());
@@ -130,6 +141,7 @@ public class LinkServiceImpl implements LinkService {
      * @param shortUri 短链接
      * 查路由表获取分组标识，由分组标识和短链接查询原始短链接并跳转
      */
+    //TODO 进行短链接统计
     @Override
     public void restore(String shortUri, HttpServletRequest request, HttpServletResponse response) throws IOException {
         String fullShortUrl = defaultDomain + "/" + shortUri;
@@ -137,6 +149,7 @@ public class LinkServiceImpl implements LinkService {
         String originUrl = stringRedisTemplate.opsForValue().get(String.format(LINK_GOTO_KEY, shortUri));
         // 如果获取的原始链接不为空，那么就进行跳转
         if (StrUtil.isNotEmpty(originUrl)) {
+            linkStats(shortUri,request, response);
             response.sendRedirect(originUrl);
             return;
         }
@@ -161,6 +174,7 @@ public class LinkServiceImpl implements LinkService {
             originUrl = stringRedisTemplate.opsForValue().get(String.format(LINK_GOTO_KEY, shortUri));
             // 如果获取的原始链接不为空，那么就进行跳转
             if (StrUtil.isNotEmpty(originUrl)) {
+                linkStats(shortUri,request, response);
                 response.sendRedirect(originUrl);
                 return;
             }
@@ -176,6 +190,7 @@ public class LinkServiceImpl implements LinkService {
             if (link != null) {
                 originUrl = link.getOriginUrl();
                 stringRedisTemplate.opsForValue().set(String.format(LINK_GOTO_KEY, shortUri), originUrl, LinkUtil.getLinkCacheValidTime(link.getValidTime()), TimeUnit.MILLISECONDS);
+                linkStats(shortUri,request, response);
                 response.sendRedirect(originUrl);
             } else { // 如果数据库中不存在，缓存一个空值
                 stringRedisTemplate.opsForValue().set(String.format(LOCK_LINK_GOTO_KEY, shortUri), "-", LINK_GOTO_NULL_TIME_KEY, TimeUnit.SECONDS);
@@ -186,6 +201,27 @@ public class LinkServiceImpl implements LinkService {
         }
     }
 
+    /**
+     * 短链接数据统计
+     */
+    private void linkStats(String shortUri, HttpServletRequest request, HttpServletResponse response) {
+        String gid = linkMapper.gotoByUri(shortUri);
+        Date date = new Date();
+        int day = DateUtil.dayOfWeek(date);
+        int hour = DateUtil.hour(date, true);
+        LinkStats linkStats = LinkStats.builder()
+                .gid(gid)
+                .shortUri(shortUri)
+                .pv(1)
+                .uv(1)
+                .uip(1)
+                .date(date)
+                .week(day)
+                .hour(hour)
+                .build();
+        //TODO 待修改
+        linkStatsMapper.updateLinkStats(linkStats);
+    }
     /**
      * 获取网站图标
      * @param urlString 网站地址
