@@ -4,11 +4,11 @@ import lombok.Data;
 
 /**
  * Author 70ash
- * Date 2024/4/24 下午11:46
+ * Date 2024/4/28 下午6:09
  * Description:
  */
 @Data
-public class LinkReCycleReq {
+public class LinkDeleteReqDTO {
     private String gid;
     private String shortUri;
 }

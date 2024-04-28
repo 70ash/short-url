@@ -9,7 +9,7 @@
         VALUES
         (#{gid}, #{domain}, #{shortUrl}, #{fullShortUrl}, #{originUrl}, #{clickNum}, #{validType}, #{validTime}, now(), now() , 0);
     </insert>
-    <update id="updateStatusByShortUri">
+    <update id="updateRecycleByShortUri">
         UPDATE t_link
         SET enable_status = 1
         WHERE
@@ -18,9 +18,26 @@
           AND enable_status = 0
           AND del_flag = 0
     </update>
-    <select id="selectByFullShortUrl" resultType="com.forzlp.project.dao.entity.Link">
-        select * FROM t_link WHERE full_short_url = #{fullShortUrl} and del_flag = 0;
-    </select>
+    <update id="updateRecoverByShortUri">
+        UPDATE t_link
+        SET enable_status = 0
+        WHERE
+            gid = #{gid}
+          AND short_uri = #{shortUri}
+          AND del_flag = 0
+    </update>
+    <update id="upDelLinkByGidAndShortUri">
+        UPDATE t_link
+        SET del_flag = 1
+        WHERE
+            gid = #{gid}
+          AND short_uri = #{shortUri}
+          AND enable_status = 1
+          AND del_flag = 0
+    </update>
+    <!--<select id="selectByFullShortUrl" resultType="com.forzlp.project.dao.entity.Link">-->
+    <!--    select * FROM t_link WHERE full_short_url = #{fullShortUrl} and del_flag = 0;-->
+    <!--</select>-->
     <select id="pageLink" resultType="com.forzlp.project.dto.resp.LinkSearchRespDTO">
         SELECT
             gid,
@@ -56,5 +73,8 @@
         SELECT * FROM t_link WHERE
             short_uri = #{shortUri}
                                AND gid = #{gid}
+    </select>
+    <select id="selectRecycleLink" resultType="com.forzlp.project.dto.resp.ShortLinkRecyclePageRespDTO">
+        SELECT * FROM  t_link WHERE enable_status = 1 AND del_flag = 0
     </select>
 </mapper>
