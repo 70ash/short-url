@@ -1,6 +1,7 @@
 package com.forzlp.project.service.impl;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.forzlp.project.common.convention.errorcode.BaseErrorCode;
 import com.forzlp.project.common.convention.excetion.ClientException;
@@ -19,6 +20,7 @@ import com.forzlp.project.service.LinkService;
 import com.forzlp.project.utils.HashUtil;
 import com.forzlp.project.utils.LinkUtil;
 import com.forzlp.project.utils.URLParser;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -38,10 +40,9 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.forzlp.project.common.constant.LinkRedisConstant.*;
 
@@ -61,6 +62,8 @@ public class LinkServiceImpl implements LinkService {
     private final GotoMapper gotoMapper;
     private final LinkStatsMapper linkStatsMapper;
 
+    @Value("${short-link.stats.ip}")
+    private String gaoDeKey;
     @Value("${short-link.domain.default}")
     private String defaultDomain;
     /**
@@ -205,6 +208,38 @@ public class LinkServiceImpl implements LinkService {
      * 短链接数据统计
      */
     private void linkStats(String shortUri, HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        // 默认uv和ip标记为false，即没有访问过
+        // 如果没有标记，那么设置+1
+        AtomicBoolean uvFlag = new AtomicBoolean();
+        AtomicBoolean ipFlag = new AtomicBoolean();
+        if (ArrayUtil.isNotEmpty(cookies)) {
+            //找到cookie
+            Arrays.stream(cookies)
+                    .filter(each -> Objects.equals(each.getName(), "uvCookie"))
+                    .findFirst()
+                    .map(Cookie::getValue) // 获取cookie对应的值
+                    .ifPresentOrElse(each -> { // 如果存在，可能是访问其他短链接得到的cookie
+                        // 把存进redis的set之中
+                        Long add = stringRedisTemplate.opsForSet().add(String.format(LINK_UV_KEY, each), shortUri);
+                        // 如果不存在于redis，代表其第一次访问
+                        uvFlag.set(add != null && add > 0);
+                    }, () -> {
+                        // 给请求添加uvCookie
+                        Cookie cookie = new Cookie("uvCookie", UUID.randomUUID() + "");
+                        stringRedisTemplate.opsForSet().add(String.format(LINK_UV_KEY, cookie), shortUri);
+                        response.addCookie(cookie);
+                        uvFlag.set(true);
+                    });
+        }else {
+            Cookie cookie = new Cookie("uvCookie", UUID.randomUUID() + "");
+            stringRedisTemplate.opsForSet().add(String.format(LINK_UV_KEY, cookie), shortUri);
+            response.addCookie(cookie);
+        }
+        String remoteAddr = request.getRemoteAddr();
+        // 当同一ip访问两个不同短链接时，两个短链接都应该被记录
+        Long  ipAdd = stringRedisTemplate.opsForSet().add(String.format(LINK_IP_KEY, remoteAddr), shortUri);
+        if (ipAdd != null && ipAdd > 0) ipFlag.set(true);
         String gid = linkMapper.gotoByUri(shortUri);
         Date date = new Date();
         int day = DateUtil.dayOfWeek(date);
@@ -213,8 +248,8 @@ public class LinkServiceImpl implements LinkService {
                 .gid(gid)
                 .shortUri(shortUri)
                 .pv(1)
-                .uv(1)
-                .uip(1)
+                .uv(uvFlag.get() ? 0 : 1)
+                .uip(ipFlag.get() ? 0 : 1)
                 .date(date)
                 .week(day)
                 .hour(hour)

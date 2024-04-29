@@ -20,6 +20,9 @@ import java.io.IOException;
 public class LinkRestoreController {
     private LinkService linkService;
 
+    /**
+     * 短链接跳转
+     */
     @GetMapping("/{shortUri}")
     public void restore(@PathVariable("shortUri") String shortUri, HttpServletRequest request, HttpServletResponse response) throws IOException {
         linkService.restore(shortUri, request, response);
