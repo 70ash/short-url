@@ -237,6 +237,7 @@ public class LinkServiceImpl implements LinkService {
             response.addCookie(cookie);
         }
         String remoteAddr = request.getRemoteAddr();
+
         // 当同一ip访问两个不同短链接时，两个短链接都应该被记录
         Long  ipAdd = stringRedisTemplate.opsForSet().add(String.format(LINK_IP_KEY, remoteAddr), shortUri);
         if (ipAdd != null && ipAdd > 0) ipFlag.set(true);
