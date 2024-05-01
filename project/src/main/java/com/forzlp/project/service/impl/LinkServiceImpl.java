@@ -3,6 +3,7 @@ package com.forzlp.project.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
 import com.forzlp.project.common.convention.errorcode.BaseErrorCode;
 import com.forzlp.project.common.convention.excetion.ClientException;
 import com.forzlp.project.common.convention.excetion.ServiceException;
@@ -44,6 +45,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.forzlp.project.common.constant.LinkConstant.IP_GO_REGION_URL;
 import static com.forzlp.project.common.constant.LinkRedisConstant.*;
 
 /**
@@ -237,7 +239,8 @@ public class LinkServiceImpl implements LinkService {
             response.addCookie(cookie);
         }
         String remoteAddr = request.getRemoteAddr();
-
+        Object O = HttpUtil.get(IP_GO_REGION_URL + gaoDeKey);
+        System.out.println(O);
         // 当同一ip访问两个不同短链接时，两个短链接都应该被记录
         Long  ipAdd = stringRedisTemplate.opsForSet().add(String.format(LINK_IP_KEY, remoteAddr), shortUri);
         if (ipAdd != null && ipAdd > 0) ipFlag.set(true);
