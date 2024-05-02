@@ -88,6 +88,7 @@ public class LinkServiceImpl implements LinkService {
         String gid = requestParam.getGid();
         if (gid == null) {}//TODO 获取用户默认分组标识
         LinkCreateRespDTO linkCreateRespDTO = LinkCreateRespDTO.builder()
+
                 .gid(gid)
                 .originUrl(requestParam.getOriginUrl())
                 .fullShortUrl(fullShortUrl)
