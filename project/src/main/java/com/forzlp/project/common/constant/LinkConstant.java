@@ -9,5 +9,5 @@ public class LinkConstant {
     /** 短链接默认过期时间 **/
     public static final long DEFAULT_VALID_TIME = 2626560000L;
     /** 高德地图接口url **/
-    public static final String IP_GO_REGION_URL = "https://restapi.amap.com/v3/ip?parameters?key=";
+    public static final String IP_GO_REGION_URL = "https://restapi.amap.com/v3/ip?ip=%s&key=%s";
 }

@@ -102,13 +102,13 @@ public class LinkServiceImpl implements LinkService {
                 .originUrl(requestParam.getOriginUrl())
                 .shortUrl(path)
                 .fullShortUrl(fullShortUrl)
-                .favicon(extractIconUrl(requestParam.getOriginUrl()))
+                // .favicon(extractIconUrl(requestParam.getOriginUrl()))
                 .validType(requestParam.getValidType())
                 .validTime(requestParam.getValidTime())
                 .clickNum(0)
                 .enableStatus(0)
                 .build();
-        Goto build = Goto.builder()
+        Goto aGoto = Goto.builder()
                 .gid(requestParam.getGid())
                 .shortUri(path)
                 .build();
@@ -118,7 +118,10 @@ public class LinkServiceImpl implements LinkService {
                 .build();
         try {
             linkMapper.insertLink(link);
-            gotoMapper.insertGoto(build);
+
+            // gotoMapper.insertGoto(aGoto);
+
+            gotoMapper.insertGoto2(aGoto);
             linkStatsMapper.insertLinkStats(linkStats);
             // 加入到布隆过滤器
             // 存入redis作缓存预热,
@@ -240,7 +243,9 @@ public class LinkServiceImpl implements LinkService {
             response.addCookie(cookie);
         }
         String remoteAddr = request.getRemoteAddr();
-        Object O = HttpUtil.get(IP_GO_REGION_URL + gaoDeKey);
+        String temp = "114.247.50.2";
+        String format = String.format(IP_GO_REGION_URL, temp, gaoDeKey);
+        Object O = HttpUtil.get(format);
         System.out.println(O);
         // 当同一ip访问两个不同短链接时，两个短链接都应该被记录
         Long  ipAdd = stringRedisTemplate.opsForSet().add(String.format(LINK_IP_KEY, remoteAddr), shortUri);

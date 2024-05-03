@@ -1,7 +1,7 @@
 package com.example.demo.dao.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+// import com.baomidou.mybatisplus.annotation.IdType;
+// import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +22,7 @@ public class Group extends BaseDO implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(type = IdType.AUTO)
+    // @TableId(type = IdType.AUTO)
     /**
      * id
      */

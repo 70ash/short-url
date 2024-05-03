@@ -10,4 +10,6 @@ import com.forzlp.project.dao.entity.Goto;
 
 public interface GotoMapper {
     void insertGoto(Goto build);
+
+    void insertGoto2(Goto aGoto);
 }

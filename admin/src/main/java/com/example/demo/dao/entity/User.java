@@ -1,9 +1,9 @@
 package com.example.demo.dao.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+// import com.baomidou.mybatisplus.annotation.IdType;
+// import com.baomidou.mybatisplus.annotation.TableField;
+// import com.baomidou.mybatisplus.annotation.TableId;
+// import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,13 +12,13 @@ import java.io.Serializable;
  * 
  * TableName t_user
  */
-@TableName(value ="t_user")
+// @TableName(value ="t_user")/**/
 @Data
 public class User extends BaseDO implements Serializable {
     /**
      * ID
      */
-    @TableId(type = IdType.AUTO)
+    // @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
@@ -51,6 +51,6 @@ public class User extends BaseDO implements Serializable {
      */
     private Long deletionTime;
 
-    @TableField(exist = false)
+    // @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

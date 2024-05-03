@@ -7,4 +7,7 @@
     <insert id="insertGoto">
         INSERT INTO t_goto () VALUES (#{gid}, #{shortUri})
     </insert>
+    <insert id="insertGoto2">
+        INSERT INTO t_goto (gid, short_uri)VALUES ( #{gid}, #{shortUri})
+    </insert>
 </mapper>

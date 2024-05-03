@@ -3,8 +3,8 @@ package com.example.demo.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
 import com.alibaba.fastjson2.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+// import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+// import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.example.demo.common.convention.excetion.ClientException;
 import com.example.demo.dao.entity.User;
 import com.example.demo.dao.mapper.UserMapper;
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
     private final GroupService groupService;
     @Override
     public UserRespDTO getUserByUsername(String username) {
-        LambdaQueryWrapper<User> eq = Wrappers.lambdaQuery(User.class).eq(User::getUsername, username);
+        // LambdaQueryWrapper<User> eq = Wrappers.lambdaQuery(User.class).eq(User::getUsername, username);
         User user = null;
         System.out.println(user);
         if(user == null) {
