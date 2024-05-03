@@ -8,10 +8,12 @@ spring:
   data:
     redis:
       host: 8.137.150.98
-      password: ZLPen9hth!
+      password: 123
 server:
   port: 7003
 
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
 short-link:
   stats:
     ip: e3a4267533ba7b7457e98b23148b7024
