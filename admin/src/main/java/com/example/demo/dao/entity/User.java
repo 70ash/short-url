@@ -32,11 +32,6 @@ public class User extends BaseDO implements Serializable {
     private String password;
 
     /**
-     * 真实姓名
-     */
-    private String realName;
-
-    /**
      * 手机号
      */
     private String phone;
