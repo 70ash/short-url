@@ -33,6 +33,7 @@ public class GroupServiceImpl implements GroupService {
     public void saveGroup(String groupName) {
         String gid;
         String username = "90ash";
+        username =
         while (true) {
             gid = RandomStringUtil.generateRandomString();
             Group one = groupMapper.selectByGid(username, gid);

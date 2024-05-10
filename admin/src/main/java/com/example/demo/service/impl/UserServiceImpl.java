@@ -79,13 +79,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserLoginRespDTO login(UserLoginReqDTO requestPram) {
-        User user = userMapper.selectUserByInfo(requestPram);
-        if (user == null) {
-            throw new ClientException(USER_LOGIN_FAIL);
-        }
         //防止重复登录
         if (stringRedisTemplate.hasKey(USER_LOGIN_KEY + requestPram.getUsername())) {
             throw new ClientException(USER_ALREADY_LOGIN);
+        }
+        User user = userMapper.selectUserByInfo(requestPram);
+        if (user == null) {
+            throw new ClientException(USER_LOGIN_FAIL);
         }
         String token = UUID.randomUUID().toString();
         stringRedisTemplate.opsForHash().put(USER_LOGIN_KEY + requestPram.getUsername(), token, JSON.toJSONString(requestPram));

@@ -117,6 +117,7 @@ public class LinkServiceImpl implements LinkService {
                 .shortUri(path)
                 .build();
         try {
+            System.out.println(1);
             linkMapper.insertLink(link);
 
             // gotoMapper.insertGoto(aGoto);
