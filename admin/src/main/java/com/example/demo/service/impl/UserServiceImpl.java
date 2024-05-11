@@ -23,8 +23,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import static com.example.demo.common.convention.errorcode.BaseErrorCode.*;
-import static com.example.demo.common.enums.RedisEnums.LOCK_USER_REGISTER;
-import static com.example.demo.common.enums.RedisEnums.USER_LOGIN_KEY;
+import static com.example.demo.common.constant.RedisConstant.LOCK_USER_REGISTER;
+import static com.example.demo.common.constant.RedisConstant.USER_LOGIN_KEY;
 
 /**
  * Author 70ash
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
             throw new ClientException(USER_NAME_EXIST);
         }finally {
             //TODO 用户注册后创建默认短链接分组
-            groupService.saveGroup("默认分组");
+            groupService.saveGroup(requestParam.getUsername(),"默认分组");
             lock.unlock();
         }
     }

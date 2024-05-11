@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.example.demo.common.biz.UserContext;
 import com.example.demo.common.convention.excetion.ClientException;
 import com.example.demo.common.convention.excetion.ServiceException;
 import com.example.demo.dao.entity.Group;
@@ -28,12 +29,18 @@ import static com.example.demo.common.convention.errorcode.BaseErrorCode.USER_GR
 public class GroupServiceImpl implements GroupService {
 
     private GroupMapper groupMapper;
-
     @Override
     public void saveGroup(String groupName) {
+        String username = UserContext.getUsername();
+        group(groupName, username);
+    }
+    @Override
+    public void saveGroup(String groupName, String username) {
+        group(groupName, username);
+    }
+
+    private void group(String groupName, String username) {
         String gid;
-        String username = "90ash";
-        username =
         while (true) {
             gid = RandomStringUtil.generateRandomString();
             Group one = groupMapper.selectByGid(username, gid);
@@ -42,7 +49,6 @@ public class GroupServiceImpl implements GroupService {
         Group group = Group.builder()
                 .gid(gid)
                 .name(groupName)
-                //TODO 后续从网关得到username
                 .username(username)
                 .build();
         try {

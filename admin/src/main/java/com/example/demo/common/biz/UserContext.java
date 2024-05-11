@@ -1,12 +1,14 @@
 package com.example.demo.common.biz;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 /**
  * 用户上下文
  */
+@Component
 public final class UserContext {
 
     private static final ThreadLocal<UserInfoDTO> USER_THREAD_LOCAL = new TransmittableThreadLocal<>();

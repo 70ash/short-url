@@ -14,6 +14,7 @@ import java.util.List;
 public interface GroupService{
     // 新增短链接分组
     void saveGroup(String groupName);
+    void saveGroup(String username, String groupName);
     // 查询短链接分组
     List<ListGroupRespDTO> listGroup();
 

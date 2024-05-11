@@ -8,7 +8,7 @@ spring:
   data:
     redis:
       host: 8.137.150.98
-      password: 123
+      password: ZLPen9hth!
 server:
   port: 7002
 mybatis:

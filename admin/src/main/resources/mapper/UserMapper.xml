@@ -25,9 +25,9 @@
     </sql>
     <insert id="insert">
         INSERT INTO t_user
-            (username, password, real_name, phone, mail, create_time, update_time)
+            (username, password, phone, mail, create_time, update_time)
         VALUES
-            (#{username}, #{password}, #{realName}, #{phone}, #{mail}, now(), now())
+            (#{username}, #{password}, #{phone}, #{mail}, now(), now())
     </insert>
     <select id="selectUserByInfo" resultType="com.example.demo.dao.entity.User">
         SELECT * FROM t_user WHERE username = #{username} AND password = #{password} AND del_flag = 0
