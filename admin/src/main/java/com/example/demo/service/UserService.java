@@ -33,13 +33,5 @@ public interface UserService{
      */
     UserLoginRespDTO login(UserLoginReqDTO requestPram);
 
-    /**
-     * 检查用户登录状态
-     * @param username 用户名
-     * @param token 用户token
-     * @return 已登录返回True, 未登录返回False
-     */
-    Boolean checkLogin(String username, String token);
-
-    String logout(String username, String token);
+    String logout();
 }

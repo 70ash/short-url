@@ -1,15 +1,16 @@
 package com.forzlp.project.common.convention.excetion;
 
-import com.forzlp.project.common.convention.errorcode.IErrorCode;
+
+import com.example.demo.common.convention.errorcode.IErrorCode;
 import lombok.Getter;
 import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
 /**
- * @Author 70ash
- * @Date 2024/1/24 23:03
- * @Description:
+ * Author 70ash
+ * Date 2024/1/24 23:03
+ * Description:
  */
 @Getter
 public class AbstractException extends RuntimeException{

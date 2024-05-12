@@ -6,7 +6,7 @@
 public class Test {
     public static final String s = "CREATE UNIQUE INDEX idx_unique_username_name  ON t_group_%d (name, username);";
 
-    public static final String s2 = "ALTER TABLE t_user_%d drop COLUMN real_name;";
+    public static final String s2 = "CREATE UNIQUE INDEX idx_unique_username_name ON t_group_%d (username,`name`);";
     @org.junit.Test
     public void createShardingTable() {
         for (int i = 0; i <= 15; i++) {

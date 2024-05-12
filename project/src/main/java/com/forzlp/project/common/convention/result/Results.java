@@ -1,14 +1,13 @@
 package com.forzlp.project.common.convention.result;
 
 
-import com.forzlp.project.common.convention.excetion.AbstractException;
-
-import static com.forzlp.project.common.convention.errorcode.BaseErrorCode.SERVICE_ERROR;
+import com.example.demo.common.convention.errorcode.BaseErrorCode;
+import com.example.demo.common.convention.excetion.AbstractException;
 
 /**
- * @Author 70ash
- * @Date 2024/1/24 22:54
- * @Description:
+ * Author 70ash
+ * Date 2024/1/24 22:54
+ * Description:
  */
 public class Results {
     public static <T> Result<T> success(T data) {
@@ -30,8 +29,8 @@ public class Results {
 
     public static Result<Void> fail() {
         return new Result<Void>()
-                .setCode(SERVICE_ERROR.code())
-                .setMessage(SERVICE_ERROR.message());
+                .setCode(BaseErrorCode.SERVICE_ERROR.code())
+                .setMessage(BaseErrorCode.SERVICE_ERROR.message());
     }
 
     public static Result<Void> fail(String errorCode, String errorMessage) {

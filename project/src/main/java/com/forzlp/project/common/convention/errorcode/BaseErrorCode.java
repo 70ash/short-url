@@ -11,7 +11,9 @@ public enum BaseErrorCode implements IErrorCode {
     USER_NAME_EXIST("A00101", "用户名已存在"),
     USER_INSERT_FAIL("A00102", "用户新增失败"),
     USER_LOGIN_FAIL("A00103", "账号或密码错误"),
+    USER_NOT_LOGIN("A00104", "用户未登录"),
     USER_ALREADY_LOGIN("A00104", "用户已登录"),
+    USER_GROUP_EXIST("A00105", "分组已存在"),
     URL_DUPLICATE_CREATE("A00105", "短链接重复创建"),
     SERVICE_ERROR("B00001", "系统错误"),
     REMOTE_ERROR("C00001", "远程调用错误");

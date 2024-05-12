@@ -1,5 +1,6 @@
 package com.example.demo.common.convention.excetion;
 
+
 import com.example.demo.common.convention.errorcode.IErrorCode;
 import lombok.Getter;
 import org.springframework.util.StringUtils;

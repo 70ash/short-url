@@ -5,7 +5,7 @@ package com.example.demo.common.convention.errorcode;
  * Date 2024/1/24 23:18
  * Description:
  */
-public enum BaseErrorCode implements IErrorCode{
+public enum BaseErrorCode implements IErrorCode {
     CLIENT_ERROR("A00001", "用户端错误"),
     USER_NOT_EXIST("A00100", "用户不存在"),
     USER_NAME_EXIST("A00101", "用户名已存在"),

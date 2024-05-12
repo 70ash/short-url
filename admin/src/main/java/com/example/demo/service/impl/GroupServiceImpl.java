@@ -13,11 +13,13 @@ import com.example.demo.dto.resp.ListLinkRespDTO;
 import com.example.demo.service.GroupService;
 import com.example.demo.util.RandomStringUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static com.example.demo.common.convention.errorcode.BaseErrorCode.USER_GROUP_EXIST;
+
 
 /**
  * Author 70ash
@@ -27,7 +29,7 @@ import static com.example.demo.common.convention.errorcode.BaseErrorCode.USER_GR
 @Service
 @AllArgsConstructor
 public class GroupServiceImpl implements GroupService {
-
+    private StringRedisTemplate stringRedisTemplate;
     private GroupMapper groupMapper;
     @Override
     public void saveGroup(String groupName) {

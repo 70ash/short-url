@@ -1,4 +1,5 @@
 package com.forzlp.project.common.convention.errorcode;
+
 /**
  * Author 70ash
  * Date 2024/1/24 23:15

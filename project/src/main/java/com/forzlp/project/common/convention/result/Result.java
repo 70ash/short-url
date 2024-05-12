@@ -6,9 +6,9 @@ import lombok.experimental.Accessors;
 import java.io.Serial;
 
 /**
- * @Author 70ash
- * @Date 2024/1/24 22:51
- * @Description:
+ * Author 70ash
+ * Date 2024/1/24 22:51
+ * Description:
  */
 @Data
 @Accessors(chain = true)

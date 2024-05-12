@@ -3,8 +3,6 @@ package com.example.demo.common.biz;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 /**
  * 用户上下文
  */
@@ -13,43 +11,24 @@ public final class UserContext {
 
     private static final ThreadLocal<UserInfoDTO> USER_THREAD_LOCAL = new TransmittableThreadLocal<>();
 
-    /**
-     * 设置用户至上下文
-     *
-     * @param user 用户详情信息
-     */
     public static void setUser(UserInfoDTO user) {
         USER_THREAD_LOCAL.set(user);
     }
 
-    /**
-     * 获取上下文中用户 ID
-     *
-     * @return 用户 ID
-     */
-    public static String getUserId() {
-        UserInfoDTO userInfoDTO = USER_THREAD_LOCAL.get();
-        return Optional.ofNullable(userInfoDTO).map(UserInfoDTO::getUserId).orElse(null);
-    }
+    // public static void setToken(String token) {
+    //     USER_THREAD_LOCAL.set(token);
+    // }
 
-    /**
-     * 获取上下文中用户名称
-     *
-     * @return 用户名称
-     */
     public static String getUsername() {
-        UserInfoDTO userInfoDTO = USER_THREAD_LOCAL.get();
-        return Optional.ofNullable(userInfoDTO).map(UserInfoDTO::getUsername).orElse(null);
+        return USER_THREAD_LOCAL.get().getUsername();
     }
 
-    /**
-     * 获取上下文中用户 Token
-     *
-     * @return 用户 Token
-     */
     public static String getToken() {
-        UserInfoDTO userInfoDTO = USER_THREAD_LOCAL.get();
-        return Optional.ofNullable(userInfoDTO).map(UserInfoDTO::getToken).orElse(null);
+        return USER_THREAD_LOCAL.get().getToken();
+    }
+
+    public static Long getUserId() {
+        return USER_THREAD_LOCAL.get().getUserId();
     }
 
     /**

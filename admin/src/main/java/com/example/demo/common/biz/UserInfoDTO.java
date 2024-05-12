@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * 用户信息实体
  */
@@ -12,12 +14,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserInfoDTO {
+public class UserInfoDTO implements Serializable {
 
     /**
      * 用户 ID
      */
-    private String userId;
+    private Long userId;
 
     /**
      * 用户名

@@ -22,10 +22,10 @@ public class UserRegisterReqDTO {
     /**
      * 手机号
      */
-    private String phone;
+    private String phone = "";
 
     /**
      * 邮箱
      */
-    private String mail;
+    private String mail = "";
 }

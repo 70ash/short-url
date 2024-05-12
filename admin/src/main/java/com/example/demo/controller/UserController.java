@@ -45,7 +45,6 @@ public class UserController {
 
     /**
      *
-     * @param requestPram
      * @return 返回token，后续请求中携带token进行验证
      */
     @PostMapping("/login")
@@ -53,14 +52,8 @@ public class UserController {
         return Results.success(userService.login(requestPram));
     }
 
-
-    @GetMapping("/check/login")
-    public Result<Boolean> checkLogin(String username, String token) {
-        return Results.success(userService.checkLogin(username, token));
-    }
-
     @PostMapping("/logout")
-    public Result login(@RequestParam String username, String token) {
-        return Results.success(userService.logout(username, token));
+    public Result<String> login() {
+        return Results.success(userService.logout());
     }
 }

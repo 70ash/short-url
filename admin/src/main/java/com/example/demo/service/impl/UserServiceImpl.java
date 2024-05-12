@@ -2,9 +2,9 @@ package com.example.demo.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
-import com.alibaba.fastjson2.JSON;
-// import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-// import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import cn.hutool.json.JSONUtil;
+import com.example.demo.common.biz.UserContext;
+import com.example.demo.common.biz.UserInfoDTO;
 import com.example.demo.common.convention.excetion.ClientException;
 import com.example.demo.dao.entity.User;
 import com.example.demo.dao.mapper.UserMapper;
@@ -18,13 +18,14 @@ import lombok.AllArgsConstructor;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
+import static com.example.demo.common.constant.RedisConstant.*;
 import static com.example.demo.common.convention.errorcode.BaseErrorCode.*;
-import static com.example.demo.common.constant.RedisConstant.LOCK_USER_REGISTER;
-import static com.example.demo.common.constant.RedisConstant.USER_LOGIN_KEY;
+
 
 /**
  * Author 70ash
@@ -47,11 +48,7 @@ public class UserServiceImpl implements UserService {
         if(user == null) {
             throw new ClientException(USER_NOT_EXIST);
         }
-        UserRespDTO userRespDTO = new UserRespDTO();
-        BeanUtils.copyProperties(user, userRespDTO);
-        System.out.println("----------------------------");
-        System.out.println(userRespDTO);
-        return userRespDTO;
+        return null;
     }
 
     @Override
@@ -73,34 +70,41 @@ public class UserServiceImpl implements UserService {
         }finally {
             //TODO 用户注册后创建默认短链接分组
             groupService.saveGroup(requestParam.getUsername(),"默认分组");
-            lock.unlock();
+            if(lock.isLocked()) { // 是否还是锁定状态
+                if (lock.isHeldByCurrentThread()) { // 时候是当前执行线程的锁
+                    lock.unlock(); // 释放锁
+                }
+            }
         }
     }
 
     @Override
     public UserLoginRespDTO login(UserLoginReqDTO requestPram) {
         //防止重复登录
-        if (stringRedisTemplate.hasKey(USER_LOGIN_KEY + requestPram.getUsername())) {
+        String token = UUID.randomUUID().toString();
+        if (Boolean.FALSE.equals(stringRedisTemplate.opsForValue().setIfAbsent(USER_TOKEN_KEY+requestPram.getUsername(),token))
+        ){
             throw new ClientException(USER_ALREADY_LOGIN);
         }
         User user = userMapper.selectUserByInfo(requestPram);
         if (user == null) {
             throw new ClientException(USER_LOGIN_FAIL);
         }
-        String token = UUID.randomUUID().toString();
-        stringRedisTemplate.opsForHash().put(USER_LOGIN_KEY + requestPram.getUsername(), token, JSON.toJSONString(requestPram));
+        UserInfoDTO build = UserInfoDTO.builder()
+                .username(user.getUsername())
+                .userId(user.getId())
+                .token(token)
+                .build();
+        stringRedisTemplate.opsForValue().set(USER_TOKEN_KEY+token, JSONUtil.toJsonStr(build),USER_TOKEN_TIME,TimeUnit.MINUTES);
         return new UserLoginRespDTO(token);
     }
 
     @Override
-    public Boolean checkLogin(String username, String token) {
-        return stringRedisTemplate.opsForHash().hasKey(USER_LOGIN_KEY + username, token);
-    }
-
-    @Override
-    public String logout(String username, String token) {
+    public String logout() {
         try {
-            Long i = stringRedisTemplate.opsForHash().delete(USER_LOGIN_KEY + username, token);
+            stringRedisTemplate.delete(USER_TOKEN_KEY+ UserContext.getToken());
+            stringRedisTemplate.delete(USER_TOKEN_KEY+UserContext.getUsername());
+            UserContext.removeUser();
         } catch (Exception e) {
             throw new ClientException(USER_NOT_LOGIN);
         }

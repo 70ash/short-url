@@ -15,7 +15,7 @@ import java.util.List;
 public interface GroupMapper{
     Group selectByGid(@Param("username") String username, @Param("gid") String gid);
 
-    int insertGroup(Group group);
+    Integer insertGroup(Group group);
 
     List<ListGroupDTO> selectBatchByUserName(String username);
 

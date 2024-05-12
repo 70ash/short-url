@@ -1,17 +1,17 @@
 package com.example.demo.common.convention.excetion;
 
-import com.example.demo.common.convention.errorcode.IErrorCode;
 
-import static com.example.demo.common.convention.errorcode.BaseErrorCode.REMOTE_ERROR;
+import com.example.demo.common.convention.errorcode.BaseErrorCode;
+import com.example.demo.common.convention.errorcode.IErrorCode;
 
 /**
  * Author 70ash
  * Date 2024/1/24 23:07
  * Description:
  */
-public class RemoteException extends AbstractException{
+public class RemoteException extends AbstractException {
     public RemoteException(String message) {
-        super(message, null ,REMOTE_ERROR);
+        super(message, null , BaseErrorCode.REMOTE_ERROR);
     }
 
     public RemoteException(IErrorCode errorCode) {

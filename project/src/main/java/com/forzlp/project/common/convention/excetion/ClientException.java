@@ -1,18 +1,17 @@
 package com.forzlp.project.common.convention.excetion;
 
 
-import com.forzlp.project.common.convention.errorcode.IErrorCode;
-
-import static com.forzlp.project.common.convention.errorcode.BaseErrorCode.CLIENT_ERROR;
+import com.example.demo.common.convention.errorcode.BaseErrorCode;
+import com.example.demo.common.convention.errorcode.IErrorCode;
 
 /**
- * @Author 70ash
- * @Date 2024/1/24 23:06
- * @Description:
+ * Author 70ash
+ * Date 2024/1/24 23:06
+ * Description:
  */
 public class ClientException extends AbstractException {
     public ClientException(String message) {
-        super(message, null, CLIENT_ERROR);
+        super(message, null, BaseErrorCode.CLIENT_ERROR);
     }
 
     public ClientException(IErrorCode errorCode) {

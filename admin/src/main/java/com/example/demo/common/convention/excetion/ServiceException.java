@@ -1,17 +1,17 @@
 package com.example.demo.common.convention.excetion;
 
-import com.example.demo.common.convention.errorcode.IErrorCode;
 
-import static com.example.demo.common.convention.errorcode.BaseErrorCode.SERVICE_ERROR;
+import com.example.demo.common.convention.errorcode.BaseErrorCode;
+import com.example.demo.common.convention.errorcode.IErrorCode;
 
 /**
  * Author 70ash
  * Date 2024/1/24 23:08
  * Description:
  */
-public class ServiceException extends AbstractException{
+public class ServiceException extends AbstractException {
     public ServiceException(String message) {
-        super(message, null ,SERVICE_ERROR);
+        super(message, null , BaseErrorCode.SERVICE_ERROR);
     }
 
     public ServiceException(IErrorCode errorCode) {

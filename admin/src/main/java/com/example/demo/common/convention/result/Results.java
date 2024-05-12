@@ -1,8 +1,8 @@
 package com.example.demo.common.convention.result;
 
-import com.example.demo.common.convention.excetion.AbstractException;
 
-import static com.example.demo.common.convention.errorcode.BaseErrorCode.SERVICE_ERROR;
+import com.example.demo.common.convention.errorcode.BaseErrorCode;
+import com.example.demo.common.convention.excetion.AbstractException;
 
 /**
  * Author 70ash
@@ -29,8 +29,8 @@ public class Results {
 
     public static Result<Void> fail() {
         return new Result<Void>()
-                .setCode(SERVICE_ERROR.code())
-                .setMessage(SERVICE_ERROR.message());
+                .setCode(BaseErrorCode.SERVICE_ERROR.code())
+                .setMessage(BaseErrorCode.SERVICE_ERROR.message());
     }
 
     public static Result<Void> fail(String errorCode, String errorMessage) {
