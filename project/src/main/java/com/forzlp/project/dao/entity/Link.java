@@ -52,9 +52,14 @@ public class Link extends BaseDO implements Serializable {
     private String originUrl;
 
     /**
+     * 网站标题
+     */
+    private String title;
+
+    /**
      * 网站图标
      */
-    private String favicon;
+    private String icon;
 
     /**
      * 点击量

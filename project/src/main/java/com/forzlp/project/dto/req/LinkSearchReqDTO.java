@@ -12,7 +12,7 @@ public class LinkSearchReqDTO {
     // 分组标识
     private String gid;
     // 当前页码
-    private Integer current;
+    private Integer pageNum;
     // 每页数量
-    private Integer size;
+    private Integer pageSize;
 }

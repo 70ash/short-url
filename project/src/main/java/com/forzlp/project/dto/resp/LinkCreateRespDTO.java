@@ -29,6 +29,14 @@ public class LinkCreateRespDTO {
      * 原始链接
      */
     private String originUrl;
+    /**
+     * 网站标题
+     */
+    private String title;
+
+    private int pv;
+    private int uv;
+    private int uip;
 
     /**
      * 有效时间，0：永久有效，1：自定义
@@ -37,4 +45,5 @@ public class LinkCreateRespDTO {
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date validTime;
+
 }

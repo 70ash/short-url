@@ -3,8 +3,10 @@ package com.forzlp.project.service;
 
 import com.forzlp.project.dto.req.LinkCreateReqDTO;
 import com.forzlp.project.dto.req.LinkSearchReqDTO;
+import com.forzlp.project.dto.req.LinkStatsReqDTO;
 import com.forzlp.project.dto.resp.LinkCreateRespDTO;
 import com.forzlp.project.dto.resp.LinkSearchRespDTO;
+import com.forzlp.project.dto.resp.LinkStatsRespDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -31,4 +33,9 @@ public interface LinkService {
      * 短链接跳转
      */
     void restore(String shortUri, HttpServletRequest request, HttpServletResponse response) throws IOException;
+
+    /**
+     * 查询短链接信息
+     */
+    LinkStatsRespDTO linkStats(LinkStatsReqDTO requestParam);
 }

@@ -21,6 +21,10 @@ public class LinkCreateReqDTO {
      * 原始链接
      */
     private String originUrl;
+    /**
+     * 标题
+     */
+    private String title;
 
     /**
      * 有效时间，0：永久有效，1：自定义

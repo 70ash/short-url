@@ -5,9 +5,9 @@
 <mapper namespace="com.forzlp.project.dao.mapper.LinkMapper">
 
     <insert id="insertLink">
-        INSERT INTO t_link (gid, domain, short_uri, full_short_url, origin_url, click_num,  valid_type, valid_time, create_time, update_time, del_flag)
+        INSERT INTO t_link ( gid, domain, short_uri, full_short_url, origin_url, click_num, icon, title,valid_type, valid_time, create_time, update_time, del_flag )
         VALUES
-        (#{gid}, #{domain}, #{shortUrl}, #{fullShortUrl}, #{originUrl}, #{clickNum}, #{validType}, #{validTime}, now(), now() , 0);
+            ( #{gid}, #{domain}, #{shortUrl}, #{fullShortUrl}, #{originUrl}, #{clickNum},#{icon}, #{title},#{validType}, #{validTime}, now(), now() , 0);
     </insert>
     <update id="updateRecycleByShortUri">
         UPDATE t_link
@@ -40,17 +40,22 @@
     <!--</select>-->
     <select id="pageLink" resultType="com.forzlp.project.dto.resp.LinkSearchRespDTO">
         SELECT
-            gid,
-            domain,
-            short_uri as shortUri,
-            full_short_url AS fullShortUrl,
-            origin_url AS originUrl,
-            click_num AS clickNum,
-            valid_type AS validType,
-            valid_time AS validTime
-        FROM t_link
-        WHERE enable_status = 0 AND del_flag = 0 AND gid = #{gid}
-        LIMIT #{current}, #{size}
+        a.gid,
+        domain,
+        a.short_uri as shortUri,
+        full_short_url AS fullShortUrl,
+        origin_url AS originUrl,
+        COUNT(CASE WHEN pv > 0 THEN 1 END) AS pv,
+        COUNT(CASE WHEN uv > 0 THEN 1 END) AS uv,
+        COUNT(CASE WHEN uip > 0 THEN 1 END) AS uip,
+        icon as icon,
+        title as title,
+        valid_type AS validType,
+        valid_time AS validTime
+        FROM t_link a
+        left JOIN t_link_stats b ON a.short_uri = b.short_uri
+        WHERE a.enable_status = 0 AND a.del_flag = 0 AND a.gid = #{gid}
+        GROUP BY shortUri
     </select>
     <select id="selectOriginUrlByUriAndGid" resultType="java.lang.String">
         SELECT
@@ -77,4 +82,153 @@
     <select id="selectRecycleLink" resultType="com.forzlp.project.dto.resp.ShortLinkRecyclePageRespDTO">
         SELECT * FROM  t_link WHERE enable_status = 1 AND del_flag = 0
     </select>
+    <select id="selectLinkStats" resultType="com.forzlp.project.dao.entity.LinkStats">
+        SELECT
+            gid,
+            short_uri AS shortUri,
+            ip,
+            pv,
+            uv,
+            uip,
+            os,
+        browser,
+        province,
+        city,
+        `date`,
+        `hour`,
+        `week`
+        FROM
+            t_link_stats
+        WHERE
+        short_uri = #{short_url}
+        <!--<where>-->
+        <!--    gid = #{gid}-->
+        <!--    AND short_uri = #{short_url}-->
+        <!--    <if test="startTime != null and endTime != null ">-->
+        <!--        AND `date` between #{startTime} and #{endTime}-->
+        <!--    </if>-->
+        <!--</where>-->
+    </select>
+    <select id="selectHighRatioIpLinkStats" resultType="com.forzlp.project.dto.dto.LinkStatsHighIpDTO">
+        SELECT ip, COUNT(*) AS cnt , ROUND(COUNT(*) * 1.0 / (SELECT SUM(cnt) FROM (
+                    SELECT COUNT(*) AS cnt
+                    FROM t_link_stats
+                    WHERE short_uri = #{shortUrl}
+                    GROUP BY ip
+                ) t), 2) AS ratio
+        FROM t_link_stats
+        WHERE short_uri = #{shortUrl}
+        GROUP BY ip
+        ORDER BY cnt DESC
+            LIMIT 5;
+    </select>
+    <select id="selectLinkStatsHourly" resultType="com.forzlp.project.dto.dto.LinkStatsHourlyDTO">
+        SELECT
+            `hour`,
+            COUNT(*) AS cnt,
+            ROUND(COUNT(*) * 1.0 / (SELECT SUM(cnt) FROM (
+                     SELECT COUNT(*) AS cnt
+                     FROM t_link_stats
+                     WHERE short_uri = #{shortUrl}
+                       and `hour` is not NULL
+                     GROUP BY ip
+                 ) t), 2) AS ratio
+        FROM t_link_stats
+        WHERE short_uri = #{shortUrl}
+          and `hour` is not NULL
+        GROUP BY hour
+        ORDER BY cnt DESC;
+    </select>
+    <select id="selectLinkStatsWeekly" resultType="com.forzlp.project.dto.dto.LinkStatsWeeklyDTO">
+        SELECT
+            `week` AS day,
+            COUNT(*) AS cnt,
+            ROUND(COUNT(*) * 1.0 / (SELECT SUM(cnt) FROM (
+                     SELECT COUNT(*) AS cnt
+                     FROM t_link_stats
+                     WHERE short_uri = #{shortUrl}
+                       and `week` is not NULL
+                     GROUP BY ip
+                 ) t), 2) AS ratio
+        FROM t_link_stats
+        WHERE short_uri = #{shortUrl}
+          and `week` is not NULL
+        GROUP BY `week`
+        ORDER BY cnt DESC;
+    </select>
+    <select id="selectLinkStatsOs" resultType="com.forzlp.project.dto.dto.LinkStatsOsDTO">
+        SELECT
+            CONCAT(os,' 系统') AS os,
+            COUNT(*) AS cnt,
+            ROUND(COUNT(*) * 1.0 / (SELECT SUM(cnt) FROM (
+                                                             SELECT COUNT(*) AS cnt
+                                                             FROM t_link_stats
+                                                             WHERE short_uri = #{shortUrl}
+                                                               and `os` is not NULL
+                                                             GROUP BY ip
+                                                         ) t), 2) AS ratio
+        FROM t_link_stats
+        WHERE short_uri = #{shortUrl}
+          and `os` is not NULL
+        GROUP BY `os`
+        ORDER BY cnt DESC;
+
+    </select>
+    <select id="selectLinkStatsBrowser" resultType="com.forzlp.project.dto.dto.LinkStatsBrowserDTO">
+        SELECT
+            CONCAT(browser, ' 浏览器') AS browser,
+            COUNT(*) AS cnt,
+            ROUND(COUNT(*) * 1.0 / (SELECT SUM(cnt) FROM (
+                         SELECT COUNT(*) AS cnt
+                         FROM t_link_stats
+                         WHERE short_uri = #{shortUrl}
+                           and browser is not NULL
+                         GROUP BY ip
+                     ) t), 2) AS ratio
+        FROM t_link_stats
+        WHERE short_uri = #{shortUrl}
+          and browser is not NULL
+        GROUP BY browser
+        ORDER BY cnt DESC;
+    </select>
+
+    <select id="select7StatsHourly" resultType="com.forzlp.project.dto.dto.LinkRecentStatsDTO">
+        SELECT
+            `week` as id,
+            COUNT(CASE WHEN pv > 0 THEN 1 END) AS pv,
+            COUNT(CASE WHEN uip > 0 THEN 1 END) AS uip
+        FROM t_link_stats
+        WHERE short_uri = #{shortUrl}
+          and `week` is not NULL
+        GROUP BY week
+        ORDER BY `week` ASC;
+    </select>
+    <!--<select id="select7StatsHourly" resultType="com.forzlp.project.dto.dto.LinkRecentStatsDTO">-->
+    <!--    SELECT-->
+    <!--        `hour` as id,-->
+    <!--        COUNT(CASE WHEN pv > 0 THEN 1 END) AS pv,-->
+    <!--        COUNT(CASE WHEN uip > 0 THEN 1 END) AS uip-->
+    <!--    FROM t_link_stats-->
+    <!--    WHERE short_uri = #{shortUrl}-->
+    <!--      and `hour` is not NULL-->
+    <!--    GROUP BY hour-->
+    <!--    ORDER BY `hour` ASC;-->
+    <!--</select>-->
+    <select id="select24StatsHourly" resultType="com.forzlp.project.dto.dto.LinkRecentStatsDTO">
+        SELECT
+            `hour` as id,
+            COUNT(CASE WHEN pv > 0 THEN 1 END) AS pv,
+            COUNT(CASE WHEN uip > 0 THEN 1 END) AS uip
+        FROM t_link_stats
+        WHERE short_uri = #{shortUrl}
+          and `hour` is not NULL
+        GROUP BY hour
+        ORDER BY `hour` ASC;
+    </select>
+    <select id="selectLinkCTimeByShortUri" resultType="java.util.Date">
+        SELECT create_time from t_link WHERE gid = #{gid}
+        and short_uri = #{shortUrl} and enable_status = 0;
+    </select>
+
+
 </mapper>

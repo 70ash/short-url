@@ -1,11 +1,13 @@
 package com.forzlp.project.dao.entity;
 
+import com.forzlp.project.dto.dto.LinkRecentStatsDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Author 70ash
@@ -32,6 +34,9 @@ public class LinkStats extends BaseDO{
      */
     private String shortUri;
 
+    /** ip地址 **/
+    private String ip;
+
     /**
      * 访问量
      */
@@ -46,6 +51,22 @@ public class LinkStats extends BaseDO{
      * 独立ip数
      */
     private Integer uip;
+
+    private List<LinkRecentStatsDTO> recentStats;
+
+    /** 操作系统 **/
+    private String os;
+
+    /** 浏览器 **/
+    private String browser;
+
+    /**
+     * 省份
+     */
+    private String province;
+
+    /** 城市 **/
+    private String city;
 
     /**
      * 日期

@@ -2,10 +2,8 @@ package com.forzlp.project.dto.resp;
 
 // import com.baomidou.mybatisplus.annotation.IdType;
 // import com.baomidou.mybatisplus.annotation.TableId;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
 
-import java.util.Date;
+import lombok.Data;
 
 /**
  * Author 70ash
@@ -53,14 +51,35 @@ public class LinkSearchRespDTO {
     private Integer clickNum;
 
     /**
-     * 有效时间，0：永久有效，1：自定义
+     * 描述
      */
-    private Integer validType;
+    private String describe;
 
     /**
-     * 有效时间
-     * @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8") 用于前后端Date类型数据传输，使用这个注解后前端传输Date时可以使用字符串
+     * 描述
      */
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date validTime;
+    private String title;
+
+    /**
+     * 网站标识
+     */
+    private String icon;
+
+    /**
+     * pv
+     */
+    private Integer pv;
+
+
+    /**
+     * uv
+     */
+    private Integer uv;
+
+
+    /**
+     * uip
+     */
+    private Integer uip;
+
 }

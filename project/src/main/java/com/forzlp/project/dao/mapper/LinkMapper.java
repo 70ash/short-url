@@ -1,11 +1,15 @@
 package com.forzlp.project.dao.mapper;
 
 import com.forzlp.project.dao.entity.Link;
+import com.forzlp.project.dao.entity.LinkStats;
+import com.forzlp.project.dto.dto.*;
 import com.forzlp.project.dto.req.LinkSearchReqDTO;
+import com.forzlp.project.dto.req.LinkStatsReqDTO;
 import com.forzlp.project.dto.resp.LinkSearchRespDTO;
 import com.forzlp.project.dto.resp.ShortLinkRecyclePageRespDTO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,4 +45,22 @@ public interface LinkMapper {
     List<ShortLinkRecyclePageRespDTO> selectRecycleLink();
 
     int upDelLinkByGidAndShortUri(@Param("gid") String gid, @Param("shortUri")String shortUri);
+
+    List<LinkStats> selectLinkStats(LinkStatsReqDTO requestParam);
+
+    List<LinkStatsHighIpDTO> selectHighRatioIpLinkStats(String shortUrl);
+
+    List<LinkStatsHourlyDTO> selectLinkStatsHourly(String shortUrl);
+
+    List<LinkStatsWeeklyDTO> selectLinkStatsWeekly(String shortUrl);
+
+    List<LinkStatsOsDTO> selectLinkStatsOs(String shortUrl);
+
+    List<LinkStatsBrowserDTO> selectLinkStatsBrowser(String shortUrl);
+
+    Date selectLinkCTimeByShortUri(@Param("gid") String gid, @Param("shortUrl") String shortUrl);
+
+    List<LinkRecentStatsDTO> select7StatsHourly(String shortUrl);
+
+    List<LinkRecentStatsDTO> select24StatsHourly(String shortUrl);
 }
