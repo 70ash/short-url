@@ -48,5 +48,6 @@ public class Group extends BaseDO implements Serializable{
      */
     private Integer sortOrder;
 
-
+    /** 分组描述 **/
+    private String description;
 }

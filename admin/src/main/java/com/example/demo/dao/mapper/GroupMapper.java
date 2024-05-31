@@ -1,8 +1,8 @@
 package com.example.demo.dao.mapper;
 
 import com.example.demo.dao.entity.Group;
-import com.example.demo.dto.dto.ListGroupDTO;
 import com.example.demo.dto.req.UpdateGroupReqDTO;
+import com.example.demo.dto.resp.ListGroupRespDTO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public interface GroupMapper{
 
     Integer insertGroup(Group group);
 
-    List<ListGroupDTO> selectBatchByUserName(String username);
+    List<ListGroupRespDTO> selectBatchByUserName(String username);
 
     int updateGroup(String username, UpdateGroupReqDTO requestParam);
 

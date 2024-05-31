@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.common.convention.result.Result;
 import com.example.demo.common.convention.result.Results;
+import com.example.demo.dto.req.GroupSaveReqDTO;
 import com.example.demo.dto.req.UpdateGroupReqDTO;
 import com.example.demo.dto.resp.ListGroupRespDTO;
 import com.example.demo.service.GroupService;
@@ -22,16 +23,18 @@ public class GroupController {
     private final GroupService groupService;
     // 新增短链接分组
     @PostMapping("/save")
-    public Result<Void> saveGroup(@RequestParam("groupName") String groupName) {
-        groupService.saveGroup(groupName);
+    public Result<Void> saveGroup(@RequestBody GroupSaveReqDTO requestParam) {
+        groupService.saveGroup(requestParam);
         return Results.success();
     }
+
     // 修改短链接分组
     @PostMapping()
     public Result<Void> updateGroup(@RequestBody UpdateGroupReqDTO requestParam) {
         groupService.updateGroup(requestParam);
         return Results.success();
     }
+
     // 删除短链接分组
     @DeleteMapping()
     public Result<Void> updateGroup(String gid) {
@@ -40,8 +43,8 @@ public class GroupController {
     }
     // 查看短链接分组
     @GetMapping("/list")
-    public Result<List<ListGroupRespDTO>> listGroup() {
-        List<ListGroupRespDTO> list = groupService.listGroup();
+    public Result<List<ListGroupRespDTO>> listGroup(@RequestParam Integer pageSize, @RequestParam Integer pageNum) {
+        List<ListGroupRespDTO> list = groupService.listGroup(pageSize, pageNum);
         return Results.success(list);
     }
 }
