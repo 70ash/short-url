@@ -11,7 +11,7 @@ import com.example.demo.dto.resp.UserRespDTO;
  * Description:
  */
 public interface UserService{
-    UserRespDTO getUserByUsername(String username);
+    UserRespDTO getUserByUsername();
 
     /**
      * 查询用户名是否存在

@@ -24,6 +24,16 @@ public class UserConfiguration {
         registration.setFilter(new UserTransmitFilter(stringRedisTemplate));
         registration.addUrlPatterns("/short-link/group/*");
         registration.addUrlPatterns("/short-link/user/logout");
+        registration.addUrlPatterns("/short-link/user");
+        // registration.addUrlPatterns("/*");
         return registration;
     }
+
+    // @Bean
+    // public FilterRegistrationBean<CORSFilter> globalUserCorsFilter() {
+    //     FilterRegistrationBean<CORSFilter> registration = new FilterRegistrationBean<>();
+    //     registration.setFilter(new CORSFilter());
+    //     registration.addUrlPatterns("/*");
+    //     return registration;
+    // }
 }

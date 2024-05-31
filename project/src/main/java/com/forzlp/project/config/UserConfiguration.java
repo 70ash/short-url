@@ -1,7 +1,7 @@
 package com.forzlp.project.config;
 
 
-import com.forzlp.common.common.biz.UserTransmitFilter;
+import com.forzlp.project.common.biz.UserTransmitFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -22,8 +22,7 @@ public class UserConfiguration {
     public FilterRegistrationBean<UserTransmitFilter> globalUserTransmitFilter() {
         FilterRegistrationBean<UserTransmitFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new UserTransmitFilter(stringRedisTemplate));
-        registration.addUrlPatterns("/short-link/group/*");
-        registration.addUrlPatterns("/short-link/user/logout");
+        registration.addUrlPatterns("/short-link/link/*");
         return registration;
     }
 }

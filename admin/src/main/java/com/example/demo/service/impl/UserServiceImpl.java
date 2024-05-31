@@ -41,14 +41,13 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final GroupService groupService;
     @Override
-    public UserRespDTO getUserByUsername(String username) {
-        // LambdaQueryWrapper<User> eq = Wrappers.lambdaQuery(User.class).eq(User::getUsername, username);
-        User user = null;
-        System.out.println(user);
-        if(user == null) {
+    public UserRespDTO getUserByUsername() {
+        String username = UserContext.getUsername();
+        UserRespDTO userRespDTO = userMapper.selectUserInfoByUserName(username);
+        if(userRespDTO == null) {
             throw new ClientException(USER_NOT_EXIST);
         }
-        return null;
+        return userRespDTO;
     }
 
     @Override
@@ -69,7 +68,7 @@ public class UserServiceImpl implements UserService {
             throw new ClientException(USER_NAME_EXIST);
         }finally {
             //TODO 用户注册后创建默认短链接分组
-            groupService.saveGroup(requestParam.getUsername(),"默认分组");
+            groupService.saveGroup("默认分组", requestParam.getUsername(),"默认分组");
             if(lock.isLocked()) { // 是否还是锁定状态
                 if (lock.isHeldByCurrentThread()) { // 时候是当前执行线程的锁
                     lock.unlock(); // 释放锁
@@ -82,7 +81,7 @@ public class UserServiceImpl implements UserService {
     public UserLoginRespDTO login(UserLoginReqDTO requestPram) {
         //防止重复登录
         String token = UUID.randomUUID().toString();
-        if (Boolean.FALSE.equals(stringRedisTemplate.opsForValue().setIfAbsent(USER_TOKEN_KEY+requestPram.getUsername(),token))
+        if (Boolean.FALSE.equals(stringRedisTemplate.opsForValue().setIfAbsent(USER_TOKEN_KEY+requestPram.getUsername(),token, USER_TOKEN_TIME, TimeUnit.MINUTES))
         ){
             throw new ClientException(USER_ALREADY_LOGIN);
         }
