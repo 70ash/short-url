@@ -6,14 +6,15 @@ import com.example.demo.common.convention.excetion.ClientException;
 import com.example.demo.common.convention.excetion.ServiceException;
 import com.example.demo.dao.entity.Group;
 import com.example.demo.dao.mapper.GroupMapper;
-import com.example.demo.dto.dto.ListGroupDTO;
+import com.example.demo.dto.req.GroupSaveReqDTO;
 import com.example.demo.dto.req.UpdateGroupReqDTO;
 import com.example.demo.dto.resp.ListGroupRespDTO;
 import com.example.demo.dto.resp.ListLinkRespDTO;
 import com.example.demo.service.GroupService;
 import com.example.demo.util.RandomStringUtil;
+import com.github.pagehelper.PageHelper;
 import lombok.AllArgsConstructor;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.redisson.api.RBloomFilter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,29 +30,33 @@ import static com.example.demo.common.convention.errorcode.BaseErrorCode.USER_GR
 @Service
 @AllArgsConstructor
 public class GroupServiceImpl implements GroupService {
-    private StringRedisTemplate stringRedisTemplate;
+    private final RBloomFilter<String> groupRegisterCacheBloomFilter;
     private GroupMapper groupMapper;
+
     @Override
-    public void saveGroup(String groupName) {
+    public void saveGroup(GroupSaveReqDTO requestParam) {
         String username = UserContext.getUsername();
-        group(groupName, username);
+        group(requestParam.getName(), username, requestParam.getDescription());
     }
     @Override
-    public void saveGroup(String groupName, String username) {
-        group(groupName, username);
+    public void saveGroup(String groupName, String username, String description) {
+        group(groupName, username,description);
     }
 
-    private void group(String groupName, String username) {
+    private void group(String groupName, String username, String description) {
         String gid;
         while (true) {
             gid = RandomStringUtil.generateRandomString();
-            Group one = groupMapper.selectByGid(username, gid);
-            if (one == null) break;
+            if (!groupRegisterCacheBloomFilter.contains(gid)){ // 如果布隆过滤器不存在分组标识
+                break;
+            }
         }
+        groupRegisterCacheBloomFilter.add(gid);
         Group group = Group.builder()
                 .gid(gid)
                 .name(groupName)
                 .username(username)
+                .description(description)
                 .build();
         try {
             groupMapper.insertGroup(group);
@@ -62,22 +67,14 @@ public class GroupServiceImpl implements GroupService {
 
 
     @Override
-    public List<ListGroupRespDTO> listGroup() {
-        // TODO 后续从网关中获取username
-        String username = "90ash";
-        List<ListGroupDTO> list = groupMapper.selectBatchByUserName(username);
-        // List<ListGroupRespDTO> listGroupRespDTOList = new ArrayList<>();
-        // for (ListGroupDTO item : list) {
-        //     String gid = item.getGid();
-        //     Integer count = groupMapper.countByGid(gid);
-        //     listGroupRespDTOList.add(ListGroupRespDTO.builder()
-        //                     .gid(gid)
-        //                     .name(item.getName())
-        //                     .sortOrder(item.getSortOrder())
-        //                     .shortLinkCount(count)
-        //             .build()
-        //     );
-        // }
+    public List<ListGroupRespDTO> listGroup(Integer pageSize, Integer pageNum) {
+        String username = UserContext.getUsername();
+        PageHelper.startPage(pageNum, pageSize);
+        List<ListGroupRespDTO> list = groupMapper.selectBatchByUserName(username);
+        for (ListGroupRespDTO listGroupRespDTO :list) {
+
+        }
+
         return BeanUtil.copyToList(list, ListGroupRespDTO.class);
     }
 
@@ -89,8 +86,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void updateGroup(UpdateGroupReqDTO requestParam) {
-        // TODO 后续从网关中获取username
-        String username = "小明";
+        String username = UserContext.getUsername();
         int i = groupMapper.updateGroup(username, requestParam);
         if(i < 1) {
             throw new ServiceException("更新分组名失败");
@@ -99,8 +95,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void updateGroup(String gid) {
-        // TODO 后续从网关中获取username
-        String username = "小明";
+        String username = UserContext.getUsername();
         int i = groupMapper.deleteByGid(username, gid);
         if(i < 1) {
             throw new ServiceException("删除分组失败");
