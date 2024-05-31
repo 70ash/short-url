@@ -1,8 +1,8 @@
 package com.forzlp.project.common.convention.result;
 
 
-import com.example.demo.common.convention.errorcode.BaseErrorCode;
-import com.example.demo.common.convention.excetion.AbstractException;
+import com.forzlp.project.common.convention.errorcode.BaseErrorCode;
+import com.forzlp.project.common.convention.excetion.AbstractException;
 
 /**
  * Author 70ash

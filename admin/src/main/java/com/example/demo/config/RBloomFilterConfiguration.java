@@ -22,6 +22,16 @@ public class RBloomFilterConfiguration {
     }
 
     /**
+     * 分组标识布隆过滤器
+     */
+    @Bean
+    public RBloomFilter<String> groupRegisterCacheBloomFilter(RedissonClient redissonClient) {
+        RBloomFilter<String> cachePenetrationBloomFilter = redissonClient.getBloomFilter("groupRegisterCachePenetrationBloomFilter");
+        cachePenetrationBloomFilter.tryInit(10000000, 0.0001);
+        return cachePenetrationBloomFilter;
+    }
+
+    /**
      * 防止用户注册查询数据库的布隆过滤器
      */
     @Bean
