@@ -7,6 +7,10 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
+### 配置文件
+/*/src/main/resources/*.yml
+/*/src/main/resources/*.yaml
+
 ### STS ###
 .apt_generated
 .classpath
