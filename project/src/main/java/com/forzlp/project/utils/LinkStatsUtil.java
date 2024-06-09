@@ -20,14 +20,14 @@ public class LinkStatsUtil {
             return "Windows";
         } else if (userAgent.toLowerCase().contains("mac")) {
             return "Mac OS";
-        } else if (userAgent.toLowerCase().contains("linux")) {
-            return "Linux";
-        } else if (userAgent.toLowerCase().contains("unix")) {
-            return "Unix";
         } else if (userAgent.toLowerCase().contains("android")) {
             return "Android";
         } else if (userAgent.toLowerCase().contains("iphone")) {
             return "iOS";
+        } else if (userAgent.toLowerCase().contains("unix")) {
+            return "Unix";
+        } else if (userAgent.toLowerCase().contains("linux")) {
+            return "Linux";
         } else {
             return "Unknown";
         }

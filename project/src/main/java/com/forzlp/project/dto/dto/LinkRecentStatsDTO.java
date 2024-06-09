@@ -21,4 +21,8 @@ public class LinkRecentStatsDTO {
     public LinkRecentStatsDTO(String id) {
         this.id = id;
     }
+
+    public int compareTo(LinkRecentStatsDTO s2) {
+        return this.id.compareTo(s2.id);
+    }
 }

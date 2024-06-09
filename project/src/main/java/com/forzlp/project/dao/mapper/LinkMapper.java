@@ -10,6 +10,7 @@ import com.forzlp.project.dto.resp.ShortLinkRecyclePageRespDTO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -63,4 +64,6 @@ public interface LinkMapper {
     List<LinkRecentStatsDTO> select7StatsHourly(String shortUrl);
 
     List<LinkRecentStatsDTO> select24StatsHourly(String shortUrl);
+
+    List<HashMap> selectLinkStatsProvince(String shortUrl);
 }

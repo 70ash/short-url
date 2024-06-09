@@ -118,6 +118,7 @@
                 ) t), 2) AS ratio
         FROM t_link_stats
         WHERE short_uri = #{shortUrl}
+          and ip is not null
         GROUP BY ip
         ORDER BY cnt DESC
             LIMIT 5;
@@ -228,6 +229,16 @@
     <select id="selectLinkCTimeByShortUri" resultType="java.util.Date">
         SELECT create_time from t_link WHERE gid = #{gid}
         and short_uri = #{shortUrl} and enable_status = 0;
+    </select>
+    <select id="selectLinkStatsProvince" resultType="java.util.HashMap">
+        SELECT
+            province AS `name`,
+            COUNT(*) AS value
+        FROM t_link_stats
+        WHERE short_uri = #{shortUrl}
+          and province is not NULL
+        GROUP BY province
+        ORDER BY `value` DESC;
     </select>
 
 

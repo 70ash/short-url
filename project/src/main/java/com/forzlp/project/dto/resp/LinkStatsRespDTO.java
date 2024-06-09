@@ -4,6 +4,7 @@ import com.forzlp.project.dto.dto.*;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -18,6 +19,7 @@ public class LinkStatsRespDTO {
     private int pv;
     // private int uv;
     private int uip;
+    List<HashMap> provinceStats;
     List<LinkRecentStatsDTO> list;
     List<LinkStatsHourlyDTO> dayStats;
     List<LinkStatsWeeklyDTO> weekStats;
